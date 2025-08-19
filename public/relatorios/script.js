@@ -116,6 +116,7 @@ function renderTable(data) {
       <td data-label="Atendente">${fb.vendedor || "-"}</td>
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
       <td data-label="Estrelas">${fb.rating || "-"}</td>
+      <td data-label="Comentário">${fb.comment || "-"}</td>
       <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
       <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
