@@ -32,14 +32,20 @@ function openPopup(message) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
+
   const popup = document.createElement('div');
   popup.style.background = 'white';
-  popup.style.padding = '20px';
+  popup.style.padding = '20px 25px';
   popup.style.borderRadius = '8px';
-  popup.style.maxWidth = '500px';
+  popup.style.maxWidth = '90vw';
+  popup.style.maxHeight = '80vh';
+  popup.style.overflowY = 'auto';
   popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-  popup.style.textAlign = 'center';
+  popup.style.textAlign = 'left';
   popup.style.position = 'relative';
+  popup.style.wordBreak = 'break-word';
+  popup.style.overflowWrap = 'break-word';
+
 
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
@@ -59,12 +65,17 @@ function openPopup(message) {
   text.textContent = message || 'Sem comentário';
   text.style.color = '#333';
   text.style.whiteSpace = 'pre-wrap';
+  text.style.lineHeight = '1.5';
+  text.style.fontSize = '15px';
+  text.style.margin = '0';
 
   popup.appendChild(closeBtn);
   popup.appendChild(text);
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 }
+
+
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
