@@ -20,7 +20,7 @@ const btnNewUser = document.getElementById("newUser");
 const btnEditUser = document.getElementById("editUser");
 const btnDelUser = document.getElementById("delUser");
 
-let feedbacks = [];
+let Users = [];
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
@@ -76,7 +76,7 @@ function buildQueryString() {
 }
 
 
-function loadFeedbacks() {
+function loadUsers() {
   if (!validateFilters()) return;
 
   setButtonsDisabled(true);
@@ -93,11 +93,11 @@ function loadFeedbacks() {
       return res.json();
     })
     .then(data => {
-      feedbacks = data.data || [];
-      if (feedbacks.length === 0) {
+      Users = data.data || [];
+      if (Users.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
       } else {
-        renderTable(feedbacks);
+        renderTable(Users);
       }
       loading.style.display = "none";
       setButtonsDisabled(false);
@@ -132,16 +132,16 @@ function resetFilters() {
   filterEndDate.value = "";
   message.textContent = "";
   updateFilterButtonState();
-  loadFeedbacks();
+  loadUsers();
 }
 
 function exportToCSV() {
-  if (!feedbacks.length) {
+  if (!Users.length) {
     message.textContent = "Nada para exportar.";
     return;
   }
   const headers = ['Atendente', 'Empresa/Nome', 'Avaliações', 'Data', 'Link'];
-  const rows = feedbacks.map(user => [
+  const rows = Users.map(user => [
     user.avaliadorId || '-',
     user.company || '-',
     user.ratings || '-',
@@ -156,7 +156,7 @@ function exportToCSV() {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `feedbacks_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `Users_${new Date().toISOString().slice(0,10)}.csv`;
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -166,7 +166,7 @@ function exportToCSV() {
 
 // Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
-  if (validateFilters()) loadFeedbacks();
+  if (validateFilters()) loadUsers();
 });
 
 btnReset.addEventListener('click', resetFilters);
@@ -181,5 +181,5 @@ filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
 filterEndDate.addEventListener('input', updateFilterButtonState);
 
-// Inicializa o carregamento dos feedbacks ao abrir a página
-loadFeedbacks();
+// Inicializa o carregamento dos Users ao abrir a página
+loadUsers();
