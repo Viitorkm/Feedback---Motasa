@@ -1,14 +1,13 @@
 const BASE_API_URL = "/.netlify/functions/relatorio";
 
+// Pegando o ID secreto da URL (caso necessário na API)
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
 
+// Pegando elementos da DOM
 const tableBody = document.querySelector("#UsersTable tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
-const filterVendedor = document.getElementById("filterVendedor");
-const filterStartDate = document.getElementById("filterStartDate");
-const filterEndDate = document.getElementById("filterEndDate");
 const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
@@ -16,12 +15,22 @@ const btnNewUser = document.getElementById("newUser");
 const btnEditUser = document.getElementById("editUser");
 const btnDelUser = document.getElementById("delUser");
 
+const filterVendedor = document.getElementById("filterVendedor");
+const filterStartDate = document.getElementById("filterStartDate");
+const filterEndDate = document.getElementById("filterEndDate");
+
 let Users = [];
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
   if (isNaN(d)) return "-";
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 function setButtonsDisabled(state) {
@@ -64,13 +73,15 @@ function buildQueryString() {
   }
   if (filterEndDate.value) {
     const endDate = new Date(filterEndDate.value);
-    endDate.setDate(endDate.getDate() + 1);
+    endDate.setDate(endDate.getDate() + 1); // Inclui o dia final
     const adjustedEndDate = endDate.toISOString().split('T')[0];
     params.append("endDate", adjustedEndDate);
   }
+  if (SECRET_ID) {
+    params.append("id", SECRET_ID); // Se estiver usando autenticação via URL
+  }
   return params.toString();
 }
-
 
 function loadUsers() {
   if (!validateFilters()) return;
@@ -109,14 +120,14 @@ function loadUsers() {
 
 function renderTable(data) {
   tableBody.innerHTML = "";
-  data.forEach(Users => {
+  data.forEach(user => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="Atendente">${Users.avaliadorId || "-"}</td>
-      <td data-label="Empresa/Nome">${Users.company || "-"}</td>
-      <td data-label="Avaliacoes">${Users.ratings || "-"}</td>
-      <td data-label="Data">${formatDateBR(Users.data || Users.data || Users.date)}</td>
-      <td data-label="Link">${Users.link || "-"}</td>
+      <td data-label="Atendente">${user.avaliadorId || "-"}</td>
+      <td data-label="Empresa/Nome">${user.company || "-"}</td>
+      <td data-label="Avaliações">${user.ratings || "-"}</td>
+      <td data-label="Data">${formatDateBR(user.date || user.data)}</td>
+      <td data-label="Link">${user.link || "-"}</td>
     `;
     tableBody.appendChild(tr);
   });
@@ -141,7 +152,7 @@ function exportToCSV() {
     user.avaliadorId || '-',
     user.company || '-',
     user.ratings || '-',
-    user.data || '-',
+    formatDateBR(user.date || user.data),
     user.link || '-'
   ]);
 
@@ -160,14 +171,26 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
-
+// Eventos
+btnFilter.addEventListener('click', loadUsers);
+btnReset.addEventListener('click', resetFilters);
 btnExport.addEventListener('click', exportToCSV);
 
 btnNewUser.addEventListener('click', () => {
-  //EDITAR
+  alert("Funcionalidade de criação de novo usuário ainda não implementada.");
 });
 
+btnEditUser.addEventListener('click', () => {
+  alert("Funcionalidade de edição ainda não implementada.");
+});
 
+btnDelUser.addEventListener('click', () => {
+  alert("Funcionalidade de exclusão ainda não implementada.");
+});
 
-// Inicializa o carregamento dos Users ao abrir a página
+filterVendedor.addEventListener('input', updateFilterButtonState);
+filterStartDate.addEventListener('change', updateFilterButtonState);
+filterEndDate.addEventListener('change', updateFilterButtonState);
+
+// Inicializa o carregamento ao abrir a página
 loadUsers();
