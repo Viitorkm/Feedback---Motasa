@@ -160,12 +160,6 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
-// Eventos dos botões e inputs
-btnFilter.addEventListener('click', () => {
-  if (validateFilters()) loadUsers();
-});
-
-btnReset.addEventListener('click', resetFilters);
 
 btnExport.addEventListener('click', exportToCSV);
 
