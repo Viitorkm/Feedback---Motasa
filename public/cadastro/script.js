@@ -109,14 +109,14 @@ function loadUsers() {
 
 function renderTable(data) {
   tableBody.innerHTML = "";
-  data.forEach(user => {
+  data.forEach(Users => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="Atendente">${user.avaliadorId || "-"}</td>
-      <td data-label="Empresa/Nome">${user.company || "-"}</td>
-      <td data-label="Avaliacoes">${user.ratings || "-"}</td>
-      <td data-label="Data">${formatDateBR(user.data || user.data || user.date)}</td>
-      <td data-label="Link">${user.link || "-"}</td>
+      <td data-label="Atendente">${Users.avaliadorId || "-"}</td>
+      <td data-label="Empresa/Nome">${Users.company || "-"}</td>
+      <td data-label="Avaliacoes">${Users.ratings || "-"}</td>
+      <td data-label="Data">${formatDateBR(Users.data || Users.data || Users.date)}</td>
+      <td data-label="Link">${Users.link || "-"}</td>
     `;
     tableBody.appendChild(tr);
   });
@@ -141,7 +141,7 @@ function exportToCSV() {
     user.avaliadorId || '-',
     user.company || '-',
     user.ratings || '-',
-    formatDateBR(user.created_at || user.createdAt || user.date) || '-',
+    user.data || '-',
     user.link || '-'
   ]);
 
