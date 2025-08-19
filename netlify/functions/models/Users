@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const RegistroSchema = new mongoose.Schema({
+const UsersSchema = new mongoose.Schema({
   avaliadorId: { type: Number, required: true },
   company: { type: String, default: "" },
-  avaliacoes: { type: String, default: "" },
+  ratings: { type: String, default: "" },
   data: { type: Date, default: Date.now },
   link: [{ type: String, default: `https://feedbackmotasa.netlify.app/?atendente=${avaliadorId}` }],
 });
 
 
-module.exports = mongoose.model("Registro", RegistroSchema);
+module.exports = mongoose.model("Users", UsersSchema);

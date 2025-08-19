@@ -1,25 +1,19 @@
 const BASE_API_URL = "/.netlify/functions/relatorio";
 
-// Pegando o ID secreto da URL (caso necessário na API)
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
 
-// Pegando elementos da DOM
-const tableBody = document.querySelector("#UsersTable tbody");
+const tableBody = document.querySelector("#feedbackTable tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
-const btnFilter = document.getElementById("btnFilter");
-const btnReset = document.getElementById("btnReset");
-const btnExport = document.getElementById("btnExport");
-const btnNewUser = document.getElementById("newUser");
-const btnEditUser = document.getElementById("editUser");
-const btnDelUser = document.getElementById("delUser");
-
 const filterVendedor = document.getElementById("filterVendedor");
 const filterStartDate = document.getElementById("filterStartDate");
 const filterEndDate = document.getElementById("filterEndDate");
+const btnFilter = document.getElementById("btnFilter");
+const btnReset = document.getElementById("btnReset");
+const btnExport = document.getElementById("btnExport");
 
-let Users = [];
+let users = [];
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
@@ -73,12 +67,9 @@ function buildQueryString() {
   }
   if (filterEndDate.value) {
     const endDate = new Date(filterEndDate.value);
-    endDate.setDate(endDate.getDate() + 1); // Inclui o dia final
+    endDate.setDate(endDate.getDate() + 1);
     const adjustedEndDate = endDate.toISOString().split('T')[0];
     params.append("endDate", adjustedEndDate);
-  }
-  if (SECRET_ID) {
-    params.append("id", SECRET_ID); // Se estiver usando autenticação via URL
   }
   return params.toString();
 }
@@ -100,11 +91,11 @@ function loadUsers() {
       return res.json();
     })
     .then(data => {
-      Users = data.data || [];
-      if (Users.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
+      users = data.data || [];
+      if (users.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
       } else {
-        renderTable(Users);
+        renderTable(users);
       }
       loading.style.display = "none";
       setButtonsDisabled(false);
@@ -126,8 +117,8 @@ function renderTable(data) {
       <td data-label="Atendente">${user.avaliadorId || "-"}</td>
       <td data-label="Empresa/Nome">${user.company || "-"}</td>
       <td data-label="Avaliações">${user.ratings || "-"}</td>
-      <td data-label="Data">${formatDateBR(user.date || user.data)}</td>
-      <td data-label="Link">${user.link || "-"}</td>
+      <td data-label="Data">${formatDateBR(user.data)}</td>
+      <td data-label="Link">${(user.link && user.link.length > 0) ? `<a href="${user.link[0]}" target="_blank">Ver link</a>` : "-"}</td>
     `;
     tableBody.appendChild(tr);
   });
@@ -143,17 +134,18 @@ function resetFilters() {
 }
 
 function exportToCSV() {
-  if (!Users.length) {
+  if (!users.length) {
     message.textContent = "Nada para exportar.";
     return;
   }
+
   const headers = ['Atendente', 'Empresa/Nome', 'Avaliações', 'Data', 'Link'];
-  const rows = Users.map(user => [
+  const rows = users.map(user => [
     user.avaliadorId || '-',
     user.company || '-',
     user.ratings || '-',
-    formatDateBR(user.date || user.data),
-    user.link || '-'
+    formatDateBR(user.data),
+    user.link && user.link.length > 0 ? user.link[0] : '-'
   ]);
 
   let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
@@ -163,7 +155,7 @@ function exportToCSV() {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `Users_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `usuarios_${new Date().toISOString().slice(0,10)}.csv`;
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -172,25 +164,15 @@ function exportToCSV() {
 }
 
 // Eventos
-btnFilter.addEventListener('click', loadUsers);
+btnFilter.addEventListener('click', () => {
+  if (validateFilters()) loadUsers();
+});
 btnReset.addEventListener('click', resetFilters);
 btnExport.addEventListener('click', exportToCSV);
 
-btnNewUser.addEventListener('click', () => {
-  alert("Funcionalidade de criação de novo usuário ainda não implementada.");
-});
-
-btnEditUser.addEventListener('click', () => {
-  alert("Funcionalidade de edição ainda não implementada.");
-});
-
-btnDelUser.addEventListener('click', () => {
-  alert("Funcionalidade de exclusão ainda não implementada.");
-});
-
 filterVendedor.addEventListener('input', updateFilterButtonState);
-filterStartDate.addEventListener('change', updateFilterButtonState);
-filterEndDate.addEventListener('change', updateFilterButtonState);
+filterStartDate.addEventListener('input', updateFilterButtonState);
+filterEndDate.addEventListener('input', updateFilterButtonState);
 
-// Inicializa o carregamento ao abrir a página
+// Carrega dados ao iniciar
 loadUsers();

@@ -1,5 +1,5 @@
 const connectToDatabase = require('../../db');
-const Registro = require('./models/Registro');
+const Users = require('./models/Users');
 require('dotenv').config();
 
 let dbConnected = false;
@@ -51,7 +51,7 @@ exports.handler = async function (event, context) {
 
     const now = new Date();
 
-    const registro = await Registro.create({
+    const Users = await Users.create({
       avaliadorId,
       empresa: empresa || null,
       avaliacoes,
@@ -63,7 +63,7 @@ exports.handler = async function (event, context) {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ message: 'Usuario cadastrado com sucesso', data: registro }),
+      body: JSON.stringify({ message: 'Usuario cadastrado com sucesso', data: Users }),
     };
   } catch (error) {
     console.error('Erro ao salvar usuario:', error);
