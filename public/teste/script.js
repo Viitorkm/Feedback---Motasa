@@ -3,11 +3,7 @@ const BASE_API_URL = "/.netlify/functions/relatorio";
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
 
-// REMOVI o bloqueio por falta do ID secreto
-// Antes tinha um if que bloqueava a página se não tivesse o ID.
-// Agora ele simplesmente não obriga o ID, então segue normalmente.
-
-const tableBody = document.querySelector("#feedbackTable tbody");
+const tableBody = document.querySelector("#oi tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
 const filterVendedor = document.getElementById("filterVendedor");
@@ -17,12 +13,18 @@ const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
 
-let feedbacks = [];
+let users = [];
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
   if (isNaN(d)) return "-";
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 function setButtonsDisabled(state) {
@@ -72,8 +74,7 @@ function buildQueryString() {
   return params.toString();
 }
 
-
-function loadFeedbacks() {
+function loadUsers() {
   if (!validateFilters()) return;
 
   setButtonsDisabled(true);
@@ -90,11 +91,11 @@ function loadFeedbacks() {
       return res.json();
     })
     .then(data => {
-      feedbacks = data.data || [];
-      if (feedbacks.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
+      users = data.data || [];
+      if (users.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
       } else {
-        renderTable(feedbacks);
+        renderTable(users);
       }
       loading.style.display = "none";
       setButtonsDisabled(false);
@@ -110,15 +111,14 @@ function loadFeedbacks() {
 
 function renderTable(data) {
   tableBody.innerHTML = "";
-  data.forEach(fb => {
+  data.forEach(user => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="Atendente">${fb.vendedor || "-"}</td>
-      <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
-      <td data-label="Estrelas">${fb.rating || "-"}</td>
-      <td data-label="Comentário">${fb.comment || "-"}</td>
-      <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
-      <td data-label="IP">${fb.ip_address || "-"}</td>
+      <td data-label="Atendente">${user.avaliadorId || "-"}</td>
+      <td data-label="Empresa/Nome">${user.company || "-"}</td>
+      <td data-label="Avaliações">${user.ratings || "-"}</td>
+      <td data-label="Data">${formatDateBR(user.data)}</td>
+      <td data-label="Link">${(user.link && user.link.length > 0) ? `<a href="${user.link[0]}" target="_blank">Ver link</a>` : "-"}</td>
     `;
     tableBody.appendChild(tr);
   });
@@ -130,22 +130,22 @@ function resetFilters() {
   filterEndDate.value = "";
   message.textContent = "";
   updateFilterButtonState();
-  loadFeedbacks();
+  loadUsers();
 }
 
 function exportToCSV() {
-  if (!feedbacks.length) {
+  if (!users.length) {
     message.textContent = "Nada para exportar.";
     return;
   }
-  const headers = ['Atendente', 'Empresa/Nome', 'Estrelas', 'Comentário', 'Data', 'IP'];
-  const rows = feedbacks.map(fb => [
-    fb.vendedor || '-',
-    fb.empresa || '-',
-    fb.rating || '-',
-    `"${(fb.comment || '-').replace(/"/g, '""')}"`,
-    formatDateBR(fb.created_at || fb.createdAt || fb.date),
-    fb.ip_address || '-'
+
+  const headers = ['Atendente', 'Empresa/Nome', 'Avaliações', 'Data', 'Link'];
+  const rows = users.map(user => [
+    user.avaliadorId || '-',
+    user.company || '-',
+    user.ratings || '-',
+    formatDateBR(user.data),
+    user.link && user.link.length > 0 ? user.link[0] : '-'
   ]);
 
   let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
@@ -155,7 +155,7 @@ function exportToCSV() {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `feedbacks_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `usuarios_${new Date().toISOString().slice(0,10)}.csv`;
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -163,18 +163,16 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
-// Eventos dos botões e inputs
+// Eventos
 btnFilter.addEventListener('click', () => {
-  if (validateFilters()) loadFeedbacks();
+  if (validateFilters()) loadUsers();
 });
-
 btnReset.addEventListener('click', resetFilters);
-
 btnExport.addEventListener('click', exportToCSV);
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
 filterEndDate.addEventListener('input', updateFilterButtonState);
 
-// Inicializa o carregamento dos feedbacks ao abrir a página
-loadFeedbacks();
+// Carrega dados ao iniciar
+loadUsers();
