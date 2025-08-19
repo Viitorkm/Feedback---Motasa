@@ -7,7 +7,7 @@ const SECRET_ID = urlParams.get("id");
 // Antes tinha um if que bloqueava a página se não tivesse o ID.
 // Agora ele simplesmente não obriga o ID, então segue normalmente.
 
-const tableBody = document.querySelector("#feedbackTable tbody");
+const tableBody = document.querySelector("#oi tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
 const filterVendedor = document.getElementById("filterVendedor");
