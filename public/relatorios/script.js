@@ -19,6 +19,53 @@ const btnExport = document.getElementById("btnExport");
 
 let feedbacks = [];
 
+function openPopup(message) {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(0,0,0,0.4)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '1000';
+
+  const popup = document.createElement('div');
+  popup.style.background = 'white';
+  popup.style.padding = '20px';
+  popup.style.borderRadius = '8px';
+  popup.style.maxWidth = '500px';
+  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+  popup.style.textAlign = 'center';
+  popup.style.position = 'relative';
+
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '15px';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
+
+  closeBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+
+  const text = document.createElement('p');
+  text.textContent = message || 'Sem comentário';
+  text.style.color = '#333';
+  text.style.whiteSpace = 'pre-wrap';
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(text);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
   if (isNaN(d)) return "-";
@@ -112,16 +159,29 @@ function renderTable(data) {
   tableBody.innerHTML = "";
   data.forEach(fb => {
     const tr = document.createElement("tr");
+
     tr.innerHTML = `
       <td data-label="Atendente">${fb.vendedor || "-"}</td>
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
       <td data-label="Estrelas">${fb.rating || "-"}</td>
+      <td data-label="Comentário">
+        <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário" style="background:none; border:none; font-size:18px; cursor:pointer;">💬</button>
+      </td>
       <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
       <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
+
+    // Adiciona evento ao botão de comentário
+    const btn = tr.querySelector('.commentBtn');
+    btn.addEventListener('click', () => {
+      const comentario = fb.comentario || fb.comment || "Sem comentário";
+      openPopup(comentario);
+    });
+
     tableBody.appendChild(tr);
   });
 }
+
 
 function resetFilters() {
   filterVendedor.value = "";
