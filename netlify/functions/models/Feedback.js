@@ -5,8 +5,8 @@ const feedbackSchema = new mongoose.Schema({
   comment: { type: String, default: "" },
   ip_address: { type: String, default: "" },
   created_at: { type: Date, default: Date.now },
-  empresa: { type: String, default: null },
-  vendedor: { type: String, default: null }
+  empresa: { type: String, maxlength: 30, default: null },
+  vendedor: { type: String, maxlength: 30, default: null }
 });
 
 
