@@ -119,7 +119,7 @@ function renderTable(data) {
       <td data-label="Atendente">${user.avaliadorId || "-"}</td>
       <td data-label="Empresa/Nome">${user.company || "-"}</td>
       <td data-label="Avaliações">${user.ratings || "-"}</td>
-      <td data-label="Data">${formatDateBR(user.created_at || user.createdAt || user.date)}</td>
+      <td data-label="Data">${formatDateBR(user.data || user.data || user.date)}</td>
       <td data-label="Link">${user.link || "-"}</td>
     `;
     tableBody.appendChild(tr);
