@@ -67,6 +67,13 @@ exports.handler = async function (event, context) {
       body: JSON.stringify({ message: 'Feedback enviado com sucesso', data: feedback }),
     };
   } catch (error) {
+    if(empresa > 50){
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Nome da empresa não pode exceder 50 caracteres' }),
+      };
+    }
     console.error('Erro ao salvar feedback:', error);
     return {
       statusCode: 500,
