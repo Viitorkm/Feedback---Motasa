@@ -3,7 +3,7 @@ const BASE_API_URL = "/.netlify/functions/relatorio";
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
 
-const tableBody = document.querySelector("#oi tbody");
+const tableBody = document.querySelector("#feedbackTable tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
 const filterVendedor = document.getElementById("filterVendedor");
