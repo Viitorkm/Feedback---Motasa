@@ -167,9 +167,7 @@ btnNewUser.addEventListener('click', () => {
   //EDITAR
 });
 
-filterVendedor.addEventListener('input', updateFilterButtonState);
-filterStartDate.addEventListener('input', updateFilterButtonState);
-filterEndDate.addEventListener('input', updateFilterButtonState);
+
 
 // Inicializa o carregamento dos Users ao abrir a página
 loadUsers();
