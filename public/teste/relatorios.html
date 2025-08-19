@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="../images/favicon_motasa.png" type="image/x-icon">
+  <title>Relatório de Feedbacks</title>
+  <link rel="stylesheet" href="relatorios.css" />
+  
+</head>
+
+<body>
+  <script src="auth.js"></script>
+
+  <div class="container">
+    <h1>Relatório de Feedbacks</h1>
+
+    <div class="filters">
+      <input type="text" id="filterVendedor" placeholder="Filtrar por vendedor" aria-label="Filtrar por vendedor" />
+      <input type="date" id="filterStartDate" aria-label="Data inicial do filtro" />
+      <input type="date" id="filterEndDate" aria-label="Data final do filtro" />
+      <button id="btnFilter" aria-label="Filtrar feedbacks" disabled>Filtrar</button>
+      <button id="btnReset" aria-label="Limpar filtros">Limpar Filtros</button>
+      <button id="btnExport" aria-label="Exportar feedbacks para CSV">Exportar CSV</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="feedbackTable">
+        <thead>
+          <tr>
+            <th>Atendente</th>
+            <th>Empresa/Nome</th>
+            <th>Estrelas</th>
+            <th>Comentário</th>
+            <th>Data</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dados carregados aqui -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="loading" class="loading" style="display:none;">Carregando...</div>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
