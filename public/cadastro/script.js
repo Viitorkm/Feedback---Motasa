@@ -114,7 +114,7 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${user.avaliadorId || "-"}</td>
       <td data-label="Empresa/Nome">${user.company || "-"}</td>
-      <td data-label="Avaliações">${user.ratings || "-"}</td>
+      <td data-label="Avaliacoes">${user.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(user.data || user.data || user.date)}</td>
       <td data-label="Link">${user.link || "-"}</td>
     `;
