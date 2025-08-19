@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style-css__indexPage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous">
+    <link rel="shortcut icon" href="./images/favicon_motasa.png" type="image/x-icon">
+    <title>Feedback-Motasa</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <img src="images/Pesquisa de satisfaçãoPC (1).png" alt="Logo Motasa">
+            <h1>PESQUISA DE SATISFAÇÃO</h1>
+        </nav>
+    </header>
+
+    <main>
+        <div class="div-main">
+            <h2>Gostaríamos muito de contar com a sua participação em nossa <br> pesquisa de satisfação sobre o
+                atendimento </h2>
+        </div>
+
+        <div class="main-container">
+            <div class="rating-box">
+                <input type="radio" id="rating-5" name="rating" value="5">
+                <label for="rating-5" class="fas fa-star"></label>
+                <input type="radio" id="rating-4" name="rating" value="4">
+                <label for="rating-4" class="fas fa-star"></label>
+                <input type="radio" id="rating-3" name="rating" value="3">
+                <label for="rating-3" class="fas fa-star"></label>
+                <input type="radio" id="rating-2" name="rating" value="2">
+                <label for="rating-2" class="fas fa-star"></label>
+                <input type="radio" id="rating-1" name="rating" value="1">
+                <label for="rating-1" class="fas fa-star"></label>
+            </div>
+        </div>
+
+        <input type="text" class="empresa-nome" placeholder="Nome ou Empresa (opcional)">
+        <textarea class="feedback-text" placeholder="Deixe seu comentário aqui..."></textarea>
+
+        <button class="submit-btn">Enviar Feedback</button>
+
+        <!-- Carregamento (bolinha) -->
+        <div class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Mensagem de Sucesso ou Erro -->
+        <div class="feedback-message" style="display: none;"></div>
+        
+</main>
+
+    <footer>
+    <div class="messageFooter">
+        Agradecemos pelo tempo dedicado à nossa pesquisa <br>e pela <strong>confiança em nosso trabalho.</strong>
+    </div>
+    <div class="selos">
+        <img src="images/Pesquisa de satisfaçãoPC (2).png" alt="selos">
+    </div>
+</footer>
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

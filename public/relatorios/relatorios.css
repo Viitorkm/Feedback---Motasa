@@ -1,0 +1,166 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F9F8F3;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #4E2A1E;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filters input[type="text"],
+.filters input[type="date"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 180px;
+  font-size: 14px;
+}
+
+.filters button {
+  background-color: #4E2A1E;
+  border: none;
+  color: white;
+  padding: 9px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.filters button:hover:not(:disabled) {
+  background-color: #4E2A1E;
+}
+
+.filters button:disabled {
+  background-color: #4e2a1e77;
+  cursor: not-allowed;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+thead {
+  background-color: #4E2A1E;
+  color: white;
+}
+
+thead th {
+  padding: 12px 15px;
+}
+
+tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody td {
+  padding: 12px 15px;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #4E2A1E;
+}
+
+.message {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 600;
+  color: red;
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters input[type="text"],
+  .filters input[type="date"],
+  .filters button {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .filters button {
+    margin-top: 8px;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  tbody tr {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #4E2A1E;
+    padding-bottom: 10px;
+  }
+
+  tbody td {
+    padding-left: 50%;
+    position: relative;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #4E2A1E;
+  }
+
+  tbody td::before {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    width: 45%;
+    white-space: nowrap;
+    font-weight: 700;
+    color: #4E2A1E;
+    content: attr(data-label);
+  }
+}
