@@ -16,6 +16,9 @@ const filterEndDate = document.getElementById("filterEndDate");
 const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
+const btnNewUser = document.getElementById("newUser");
+const btnEditUser = document.getElementById("editUser");
+const btnDelUser = document.getElementById("delUser");
 
 let feedbacks = [];
 
@@ -113,12 +116,11 @@ function renderTable(data) {
   data.forEach(fb => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="Atendente">${fb.vendedor || "-"}</td>
-      <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
-      <td data-label="Estrelas">${fb.rating || "-"}</td>
-      <td data-label="Comentário">${fb.comment || "-"}</td>
-      <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
-      <td data-label="IP">${fb.ip_address || "-"}</td>
+      <td data-label="Atendente">${user.avaliadorId || "-"}</td>
+      <td data-label="Empresa/Nome">${user.company || "-"}</td>
+      <td data-label="Avaliações">${user.ratings || "-"}</td>
+      <td data-label="Comentário">${user.comment || "-"}</td>
+      <td data-label="Data">${formatDateBR(user.created_at || user.createdAt || user.date)}</td>
     `;
     tableBody.appendChild(tr);
   });
@@ -138,14 +140,13 @@ function exportToCSV() {
     message.textContent = "Nada para exportar.";
     return;
   }
-  const headers = ['Atendente', 'Empresa/Nome', 'Estrelas', 'Comentário', 'Data', 'IP'];
-  const rows = feedbacks.map(fb => [
-    fb.vendedor || '-',
-    fb.empresa || '-',
-    fb.rating || '-',
-    `"${(fb.comment || '-').replace(/"/g, '""')}"`,
-    formatDateBR(fb.created_at || fb.createdAt || fb.date),
-    fb.ip_address || '-'
+  const headers = ['Atendente', 'Empresa/Nome', 'Avaliações', 'Data', 'Link'];
+  const rows = feedbacks.map(user => [
+    user.avaliadorId || '-',
+    user.company || '-',
+    user.ratings || '-',
+    formatDateBR(user.created_at || user.createdAt || user.date) || '-',
+    user.link || '-'
   ]);
 
   let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
@@ -171,6 +172,10 @@ btnFilter.addEventListener('click', () => {
 btnReset.addEventListener('click', resetFilters);
 
 btnExport.addEventListener('click', exportToCSV);
+
+btnNewUser.addEventListener('click', () => {
+  //EDITAR
+});
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
