@@ -165,13 +165,15 @@ function renderTable(data) {
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
       <td data-label="Estrelas">${fb.rating || "-"}</td>
       <td data-label="Comentário">
-        <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário" style="background:none; border:none; font-size:18px; cursor:pointer;">💬</button>
+        <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário"
+          style="background-color: #4E2A1E; border: none; color: white; font-size: 14px; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
+          👁️
+        </button>
       </td>
       <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
       <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
 
-    // Adiciona evento ao botão de comentário
     const btn = tr.querySelector('.commentBtn');
     btn.addEventListener('click', () => {
       const comentario = fb.comentario || fb.comment || "Sem comentário";
@@ -181,6 +183,7 @@ function renderTable(data) {
     tableBody.appendChild(tr);
   });
 }
+
 
 
 function resetFilters() {
