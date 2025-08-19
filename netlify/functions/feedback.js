@@ -51,6 +51,14 @@ exports.handler = async function (event, context) {
 
     const now = new Date();
 
+    if (empresa && empresa.length > 50) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Nome da empresa não pode exceder 50 caracteres' }),
+      };
+    }
+
     const feedback = await Feedback.create({
       rating,
       comment,
