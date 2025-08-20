@@ -4,7 +4,7 @@ const UsersSchema = new mongoose.Schema({
   atendenteId: { type: Number, required: true },
   company: { type: String, default: "" },
   ratings: { type: String, default: "" },
-  data: { type: Date, default: Date.now },
+  created_at: { type: Date, default: Date.now },
   link: {
     type: String,
     default: function () {

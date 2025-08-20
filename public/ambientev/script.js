@@ -184,7 +184,7 @@ function renderTable(data) {
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">${t.link || "-"}</td>
     `;
-
+      
     const btn = tr.querySelector('.commentBtn');
     btn.addEventListener('click', () => {
       const comentario = t.comentario || t.comment || "Sem comentário";
