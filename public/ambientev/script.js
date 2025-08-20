@@ -57,24 +57,25 @@ function openPopup(message) {
   overlay.style.zIndex = '1000';
 
   const popup = document.createElement('div');
-  popup.style.background = 'white';
-  popup.style.padding = '20px 25px';
-  popup.style.borderRadius = '8px';
-  popup.style.maxWidth = '90vw';
+  popup.style.background = '#fff';
+  popup.style.padding = '32px 24px';
+  popup.style.borderRadius = '16px';
+  popup.style.maxWidth = '500px';
+  popup.style.width = '90vw';
   popup.style.maxHeight = '80vh';
   popup.style.overflowY = 'auto';
-  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-  popup.style.textAlign = 'left';
+  popup.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
   popup.style.position = 'relative';
-  popup.style.wordBreak = 'break-word';
-  popup.style.overflowWrap = 'break-word';
+  popup.style.display = 'flex';
+  popup.style.flexDirection = 'column';
+  popup.style.gap = '18px';
 
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.position = 'absolute';
-  closeBtn.style.top = '10px';
-  closeBtn.style.right = '15px';
-  closeBtn.style.fontSize = '24px';
+  closeBtn.style.top = '18px';
+  closeBtn.style.right = '24px';
+  closeBtn.style.fontSize = '28px';
   closeBtn.style.cursor = 'pointer';
   closeBtn.style.color = '#4E2A1E';
   closeBtn.title = "Fechar";
@@ -82,16 +83,36 @@ function openPopup(message) {
     document.body.removeChild(overlay);
   };
 
-  const text = document.createElement('div');
-  text.innerHTML = message || 'Sem comentário'; // <-- permite HTML
-  text.style.color = '#333';
-  text.style.whiteSpace = 'pre-wrap';
-  text.style.lineHeight = '1.5';
-  text.style.fontSize = '15px';
-  text.style.margin = '0';
+  // Título do popup
+  const title = document.createElement('h2');
+  title.textContent = 'Avaliações do Atendente';
+  title.style.margin = '0 0 12px 0';
+  title.style.fontSize = '1.3rem';
+  title.style.color = '#4E2A1E';
+  title.style.textAlign = 'center';
+
+  // Conteúdo das avaliações
+  const content = document.createElement('div');
+  content.innerHTML = message || '<div style="text-align:center;color:#888;">Sem avaliações encontradas.</div>';
+  content.style.display = 'flex';
+  content.style.flexDirection = 'column';
+  content.style.gap = '12px';
+
+  // Aplica estilo aos cards de avaliação
+  Array.from(content.children).forEach(card => {
+    card.style.background = '#f7f6f4';
+    card.style.borderRadius = '10px';
+    card.style.padding = '16px 14px';
+    card.style.boxShadow = '0 2px 8px rgba(78,42,30,0.07)';
+    card.style.borderLeft = '4px solid #4E2A1E';
+    card.style.margin = '0';
+    card.style.fontSize = '15px';
+    card.style.color = '#333';
+  });
 
   popup.appendChild(closeBtn);
-  popup.appendChild(text);
+  popup.appendChild(title);
+  popup.appendChild(content);
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 }
