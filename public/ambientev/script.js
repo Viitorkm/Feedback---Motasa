@@ -611,6 +611,7 @@ function resetFilters() {
 }
 
 function exportToCSV() {
+  console.log("invocado")
   if (!feedbacks.length) {
     message.textContent = "Nada para exportar.";
     return;
