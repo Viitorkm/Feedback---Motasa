@@ -569,7 +569,7 @@ function openPopupDeleteUser() {
     }
 
     try {
-      const url = `${BASE_API_URL}?id=${atendenteId}&deleteFeedbacks=${deleteAvaliacoes}`;
+      const url = `${BASE_API_URL}?atendenteId=${atendenteId}&deleteFeedbacks=${deleteAvaliacoes}`;
       const response = await fetch(url, {
         method: 'DELETE',
       });
