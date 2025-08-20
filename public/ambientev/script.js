@@ -146,7 +146,8 @@ function loadFeedbacks() {
 
   fetch(url)
     .then(res => {
-      if (!res.ok) throw new Error("Erro ao carregar dados do usuário");
+      //remover
+      if (!res.ok) throw new Error("Erro ao carregar dados do usuário 1");
       console.log(error)
       return res.json();
     })
