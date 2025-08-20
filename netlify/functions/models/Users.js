@@ -4,7 +4,7 @@ const UsersSchema = new mongoose.Schema({
   atendenteId: { type: Number, required: true },
   company: { type: String, default: "" },
   ratings: { type: String, default: "" },
-  created_at: { type: Date, default: Date.now },
+  data: { type: Date, default: Date.now },
   link: {
     type: String,
     default: function () {
@@ -12,6 +12,5 @@ const UsersSchema = new mongoose.Schema({
     }
   }
 });
-
 
 module.exports = mongoose.model("Users", UsersSchema);
