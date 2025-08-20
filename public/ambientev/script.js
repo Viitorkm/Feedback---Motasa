@@ -184,12 +184,11 @@ function renderTable(data) {
       <td data-label="Avaliações">${t.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
-        ${t.link
-          ? `<button class="copyLinkBtn" title="Copiar link" aria-label="Copiar link" onclick="copyToClipboard('${t.link}')">
-              📁
-            </button>`
-          : "-"}
+        <button class="copyBtn" title="Copiar link" aria-label="Copiar link" data-link="https://exemplo.com/seulink">
+          📁
+        </button>
       </td>
+
 
 
 
