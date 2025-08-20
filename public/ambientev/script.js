@@ -150,7 +150,7 @@ function loadFeedbacks() {
     .then(data => {
       feedbacks = data.data || [];
       if (feedbacks.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
       } else {
         renderTable(feedbacks);
       }
