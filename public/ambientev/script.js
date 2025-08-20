@@ -93,22 +93,68 @@ function openPopup(message) {
 
   // Conteúdo das avaliações
   const content = document.createElement('div');
-  content.innerHTML = message || '<div style="text-align:center;color:#888;">Sem avaliações encontradas.</div>';
   content.style.display = 'flex';
   content.style.flexDirection = 'column';
-  content.style.gap = '12px';
+  content.style.gap = '0';
 
-  // Aplica estilo aos cards de avaliação
-  Array.from(content.children).forEach(card => {
-    card.style.background = '#f7f6f4';
-    card.style.borderRadius = '10px';
-    card.style.padding = '16px 14px';
-    card.style.boxShadow = '0 2px 8px rgba(78,42,30,0.07)';
-    card.style.borderLeft = '4px solid #4E2A1E';
-    card.style.margin = '0';
-    card.style.fontSize = '15px';
-    card.style.color = '#333';
-  });
+  // Se não houver avaliações
+  if (!message || message.includes('Nenhuma avaliação')) {
+    content.innerHTML = '<div style="text-align:center;color:#888;">Sem avaliações encontradas.</div>';
+  } else {
+    // Quebra os cards pelo div principal
+    const cards = message.split('<div style="margin-bottom:12px;">').filter(Boolean);
+    cards.forEach((raw, idx) => {
+      // Remove o fechamento do div se existir
+      let html = raw.replace('</div>', '');
+      // Extrai dados
+      const ratingMatch = html.match(/Estrelas:<\/strong>\s*(\d+)/);
+      const commentMatch = html.match(/Comentário:<\/strong>\s*([^<]*)/);
+      const dateMatch = html.match(/Data:<\/strong>\s*([^<]*)/);
+
+      const rating = ratingMatch ? Number(ratingMatch[1]) : '-';
+      const comment = commentMatch ? commentMatch[1] : 'Sem comentário';
+      const date = dateMatch ? dateMatch[1] : '-';
+
+      // Card estilizado
+      const card = document.createElement('div');
+      card.style.background = '#f7f6f4';
+      card.style.borderRadius = '12px';
+      card.style.padding = '18px 16px';
+      card.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
+      card.style.border = '2px solid #e0d7cf';
+      card.style.margin = '0 0 18px 0';
+      card.style.position = 'relative';
+
+      // Estrela visual
+      const star = document.createElement('span');
+      star.innerHTML = '⭐'.repeat(rating);
+      star.style.fontSize = '22px';
+      star.style.color = '#f7b801';
+      star.style.position = 'absolute';
+      star.style.top = '18px';
+      star.style.right = '18px';
+
+      // Conteúdo do card
+      card.innerHTML = `
+        <div style="font-weight:600;color:#4E2A1E;margin-bottom:8px;">Comentário #${idx + 1}</div>
+        <div style="margin-bottom:6px;"><strong>Estrelas:</strong> ${rating}</div>
+        <div style="margin-bottom:6px;"><strong>Comentário:</strong> ${comment}</div>
+        <div style="margin-bottom:0;"><strong>Data:</strong> ${date}</div>
+      `;
+      card.appendChild(star);
+
+      // Separador visual entre cards
+      if (idx > 0) {
+        const separator = document.createElement('div');
+        separator.style.height = '2px';
+        separator.style.background = '#e0d7cf';
+        separator.style.margin = '0 0 18px 0';
+        content.appendChild(separator);
+      }
+
+      content.appendChild(card);
+    });
+  }
 
   popup.appendChild(closeBtn);
   popup.appendChild(title);
