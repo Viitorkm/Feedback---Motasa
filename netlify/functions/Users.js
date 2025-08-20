@@ -71,7 +71,7 @@ exports.handler = async function (event, context) {
     }
 
     // Busca os usuários filtrados no banco
-    const users = await userModel.find().sort({ created_at: -1 }).lean();
+    const users = await userModel.find().sort({ data: -1 }).lean();
 
     //remover
     console.log('Usuários encontrados:', users);
