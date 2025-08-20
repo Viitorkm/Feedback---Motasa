@@ -20,6 +20,29 @@ const btncreateUser = document.getElementById("btncreateUser");
 
 let users = [];
 
+function popupRating(userId) {
+  // Busca avaliações do atendente
+  fetch(`/.netlify/functions/getavaliacoes?id=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      const feedbacks = data.feedbacks || [];
+      if (feedbacks.length === 0) {
+        openPopup("Nenhuma avaliação encontrada para este atendente.");
+      } else {
+        // Monta HTML das avaliações
+        const html = feedbacks.map(fb => `
+          <div style="margin-bottom:12px;">
+            <strong>Estrelas:</strong> ${fb.rating} <br>
+            <strong>Comentário:</strong> ${fb.comment || "Sem comentário"} <br>
+            <strong>Data:</strong> ${fb.created_at}
+          </div>
+        `).join("");
+        openPopup(html);
+      }
+    })
+    .catch(() => openPopup("Erro ao buscar avaliações."));
+}
+
 function openPopup(message) {
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
@@ -181,7 +204,11 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
-      <td data-label="Avaliações">${t.ratings || "-"}</td>
+      <td data-label="Avaliações">
+        <button class="ratingBtn" style="background:#4E2A1E;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;">
+          👁️ Ver
+        </button>
+      </td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
         <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
@@ -192,6 +219,11 @@ function renderTable(data) {
       </td>
     `;
 
+    // Botão de avaliações
+    const ratingBtn = tr.querySelector('.ratingBtn');
+    ratingBtn.addEventListener('click', () => popupRating(t.atendenteId));
+
+    // Botão de copiar link
     const btn = tr.querySelector('.copyBtn');
     btn.addEventListener('click', () => {
       const link = btn.getAttribute('data-link');
