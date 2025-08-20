@@ -78,18 +78,20 @@ function openPopup(message) {
   closeBtn.style.position = 'fixed';
   closeBtn.style.top = 'calc(50% - 40vh + 18px)';
   closeBtn.style.right = 'calc(50% - 260px + 24px)';
-  closeBtn.style.fontSize = '32px';
-  closeBtn.style.cursor = 'pointer';
-  closeBtn.style.color = '#4E2A1E';
-  closeBtn.style.background = '#fff';
-  closeBtn.style.borderRadius = '50%';
   closeBtn.style.width = '40px';
   closeBtn.style.height = '40px';
+  closeBtn.style.background = '#fff';
+  closeBtn.style.borderRadius = '50%';
+  closeBtn.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
+  closeBtn.style.zIndex = '1101';
+  closeBtn.style.fontSize = '32px';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.style.cursor = 'pointer';
   closeBtn.style.display = 'flex';
   closeBtn.style.alignItems = 'center';
   closeBtn.style.justifyContent = 'center';
-  closeBtn.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
-  closeBtn.style.zIndex = '1101';
+  closeBtn.style.textAlign = 'center';
+  closeBtn.style.lineHeight = '40px'; // Centraliza verticalmente
   closeBtn.title = "Fechar";
   closeBtn.onclick = () => {
     document.body.removeChild(overlay);
@@ -515,7 +517,7 @@ btncreateUser.addEventListener('click', openPopupUser)
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
-filterEndDate.addEventListener('input', updateFilterButtonState);
+filterEndDate.addEventListener('input', updateFilterButtonState;
 
 // Inicializa o carregamento dos feedbacks ao abrir a página
 loadFeedbacks();
