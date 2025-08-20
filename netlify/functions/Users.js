@@ -1,5 +1,5 @@
 const connectToDatabase = require('../../db');
-const users = require('./models/Users');
+const userModel = require('./models/Users');
 require('dotenv').config();
 
 let dbConnected = false;
@@ -71,7 +71,7 @@ exports.handler = async function (event, context) {
     }
 
     // Busca os usuários filtrados no banco
-    const users = await users.find(filters).sort({ created_at: -1 }).lean();
+    const users = await userModel.find(filters).sort({ created_at: -1 }).lean();
 
     return {
       statusCode: 200,
