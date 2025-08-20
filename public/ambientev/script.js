@@ -22,7 +22,7 @@ let users = [];
 
 function popupRating(userId) {
   // Busca avaliações do atendente
-  fetch(`/.netlify/functions/getavaliacoes?id=${userId}`)
+  fetch(`/.netlify/functions/GetAvaliacoes?id=${userId}`)
     .then(res => res.json())
     .then(data => {
       const feedbacks = data.feedbacks || [];
