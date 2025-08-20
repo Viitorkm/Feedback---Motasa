@@ -184,8 +184,11 @@ function renderTable(data) {
       <td data-label="Avaliações">${t.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
-  ${t.link ? `<button onclick="copyToClipboard('${t.link}')" class="copy-btn">Copiar Link</button>` : "-"}
+  ${t.link
+    ? `<button onclick="copyToClipboard('${t.link}')" class="copy-btn">📁🟫 Copiar</button>`
+    : "-"}
 </td>
+
 
     `;
 
