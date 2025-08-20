@@ -1,5 +1,4 @@
 if (!sessionStorage.getItem("token")) {
-  window.location.href = "/ambientedev/login.html";
-
+  window.location.href = "/ambientev/login.html";
 }
 
