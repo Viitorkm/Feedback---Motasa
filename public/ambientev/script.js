@@ -16,6 +16,7 @@ const filterEndDate = document.getElementById("filterEndDate");
 const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
+const btncreateUser = document.getElementById("btncreateUser");
 
 let users = [];
 
@@ -190,6 +191,67 @@ function renderTable(data) {
 }
 
 
+function openPopupUser(message = "Sem comentário") {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(0,0,0,0.4)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '1000';
+
+  const popup = document.createElement('div');
+  popup.style.background = 'white';
+  popup.style.padding = '20px 25px';
+  popup.style.borderRadius = '8px';
+  popup.style.maxWidth = '90vw';
+  popup.style.maxHeight = '80vh';
+  popup.style.overflowY = 'auto';
+  popup.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.1)';
+  popup.style.textAlign = 'left';
+  popup.style.position = 'relative';
+  popup.style.wordBreak = 'break-word';
+
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '15px';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
+
+  closeBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+
+  const text = document.createElement('p');
+  text.textContent = message;
+  text.style.color = '#333';
+  text.style.whiteSpace = 'pre-wrap';
+  text.style.lineHeight = '1.5';
+  text.style.fontSize = '15px';
+  text.style.margin = '0';
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(text);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btncreateUser = document.getElementById('btncreateUser');
+  if (btncreateUser) {
+    btncreateUser.addEventListener('click', () => {
+      openPopupUser("Conteúdo do popup para criar usuário");
+    });
+  }
+});
 
 function resetFilters() {
   filterVendedor.value = "";
@@ -229,6 +291,9 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
+function openPopupUser() { 
+
+}
 // Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
   if (validateFilters()) loadFeedbacks();
@@ -237,6 +302,8 @@ btnFilter.addEventListener('click', () => {
 btnReset.addEventListener('click', resetFilters);
 
 btnExport.addEventListener('click', exportToCSV);
+
+btncreateUser.addEventListener('click', openPopupUser)
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
