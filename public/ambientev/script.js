@@ -56,7 +56,6 @@ function openPopup(message) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
-
   const popup = document.createElement('div');
   popup.style.background = 'white';
   popup.style.padding = '20px 25px';
@@ -70,7 +69,6 @@ function openPopup(message) {
   popup.style.wordBreak = 'break-word';
   popup.style.overflowWrap = 'break-word';
 
-
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.position = 'absolute';
@@ -80,13 +78,12 @@ function openPopup(message) {
   closeBtn.style.cursor = 'pointer';
   closeBtn.style.color = '#4E2A1E';
   closeBtn.title = "Fechar";
-
   closeBtn.onclick = () => {
     document.body.removeChild(overlay);
   };
 
-  const text = document.createElement('p');
-  text.textContent = message || 'Sem comentário';
+  const text = document.createElement('div');
+  text.innerHTML = message || 'Sem comentário'; // <-- permite HTML
   text.style.color = '#333';
   text.style.whiteSpace = 'pre-wrap';
   text.style.lineHeight = '1.5';
