@@ -1,4 +1,4 @@
-const BASE_API_URL = "/.netlify/functions/relatorio";
+const BASE_API_URL = "/.netlify/functions/cadastro";
 
 // Pegando o ID secreto da URL (caso necessário na API)
 const urlParams = new URLSearchParams(window.location.search);
@@ -92,7 +92,8 @@ function loadUsers() {
   tableBody.innerHTML = "";
 
   const queryString = buildQueryString();
-  const url = `${BASE_API_URL}?${queryString}`;
+  const url = `${BASE_API_URL}?tipo=Users&${queryString}`;
+
 
   fetch(url)
     .then(res => {
@@ -102,7 +103,7 @@ function loadUsers() {
     .then(data => {
       Users = data.data || [];
       if (Users.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum Usuario encontrado.</td></tr>`;
       } else {
         renderTable(Users);
       }
