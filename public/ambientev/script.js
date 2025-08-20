@@ -144,7 +144,7 @@ function loadFeedbacks() {
 
   fetch(url)
     .then(res => {
-      if (!res.ok) throw new Error("Erro ao carregar dados");
+      if (!res.ok) throw new Error("Erro ao carregar dados do usuário");
       console.log(error)
       return res.json();
     })
@@ -162,7 +162,8 @@ function loadFeedbacks() {
     .catch(err => {
       loading.style.display = "none";
       message.textContent = err.message || "Erro ao carregar dados.";
-      console.error(err);
+      //remover
+      console.error(err.message);
       setButtonsDisabled(false);
       updateFilterButtonState();
     });
