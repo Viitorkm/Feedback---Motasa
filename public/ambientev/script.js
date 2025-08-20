@@ -311,13 +311,14 @@ function openPopupUser() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ atendenteId: Number(atendenteId), company }),
       });
+      //remover
       console.log(response)
       console.log(response.ok)
       if (!response.ok) throw new Error('Erro ao cadastrar usuário.');
 
       alert('Usuário cadastrado com sucesso!');
       document.body.removeChild(overlay);
-      // Aqui pode chamar uma função para atualizar a lista, se precisar
+      loadFeedbacks(); // aqui atualiza a lista depois de criar o usuario
     } catch (error) {
       alert('Erro ao cadastrar usuário: ' + error.message);
     }
@@ -330,7 +331,6 @@ function openPopupUser() {
   document.body.appendChild(overlay);
 }
 
-// Para adicionar o listener ao botão de criação, faça isso no DOMContentLoaded:
 document.addEventListener('DOMContentLoaded', () => {
   const btncreateUser = document.getElementById('btncreateUser');
   if (btncreateUser) {
