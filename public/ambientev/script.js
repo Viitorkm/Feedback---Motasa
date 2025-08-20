@@ -172,21 +172,16 @@ function renderTable(data) {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td data-label="Atendente">${fb.vendedor || "-"}</td>
-      <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
-      <td data-label="Link">${fb.link || "-"}</td>
-      <td data-label="Comentário">
-        <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário"
-          style="background-color: #4E2A1E; border: none; color: white; font-size: 14px; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
-          👁️
-        </button>
-      </td>
-      <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
+      <td data-label="Atendente">${t.atendenteId || "-"}</td>
+      <td data-label="Empresa/Nome">${t.empresa || "-"}</td>
+      <td data-label="Avaliações">${t.avaliacoes || "-"}</td>
+      <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
+      <td data-label="Link">${t.link || "-"}</td>
     `;
 
     const btn = tr.querySelector('.commentBtn');
     btn.addEventListener('click', () => {
-      const comentario = fb.comentario || fb.comment || "Sem comentário";
+      const comentario = t.comentario || t.comment || "Sem comentário";
       openPopup(comentario);
     });
 
@@ -211,13 +206,12 @@ function exportToCSV() {
     return;
   }
   const headers = ['Atendente', 'Empresa/Nome', 'Avaliacoes', 'Data', 'Link'];
-  const rows = feedbacks.map(fb => [
-    fb.vendedor || '-',
-    fb.empresa || '-',
-    fb.rating || '-',
-    `"${(fb.comment || '-').replace(/"/g, '""')}"`,
-    formatDateBR(fb.created_at || fb.createdAt || fb.date),
-    fb.ip_address || '-'
+  const rows = users.map(u => [
+    u.atendenteId || '-',
+    u.empresa || '-',
+    u.avaliacoes || '-',
+    u.link || '-',
+    formatDateBR(u.created_at || u.createdAt || u.date),
   ]);
 
   let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
