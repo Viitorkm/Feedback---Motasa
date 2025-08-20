@@ -140,7 +140,7 @@ function loadFeedbacks() {
   tableBody.innerHTML = "";
 
   const queryString = buildQueryString();
-  const url = `${BASE_API_URL}?tipo=Users&${queryString}`;
+  const url = `${BASE_API_URL}?${queryString}`;
   //remover
   console.log('Carregando feedbacks com URL:', url);
 
