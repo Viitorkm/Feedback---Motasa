@@ -184,19 +184,33 @@ function renderTable(data) {
       <td data-label="Avaliações">${t.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
-        <button class="copyBtn" title="Copiar link" aria-label="Copiar link" data-link="https://exemplo.com/seulink">
+        <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
+          style="background-color: #4E2A1E; border: none; color: white; font-size: 16px; padding: 6px 10px; border-radius: 4px; cursor: pointer;"
+          data-link="${t.link || '#'}">
           📁
         </button>
       </td>
-
-
-
-
     `;
+
+    const btn = tr.querySelector('.copyBtn');
+    btn.addEventListener('click', () => {
+      const link = btn.getAttribute('data-link');
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          btn.textContent = '✅';
+          setTimeout(() => {
+            btn.textContent = '📁';
+          }, 1500);
+        })
+        .catch(() => {
+          alert('Erro ao copiar o link!');
+        });
+    });
 
     tableBody.appendChild(tr);
   });
 }
+
 
 
 function openPopupUser() {
