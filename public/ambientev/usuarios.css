@@ -173,3 +173,31 @@ tbody td {
   justify-content: center;
   align-items: center;
 }
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+button[aria-label="Criar Usuário"] {
+  background-color: green;
+  color: white;
+}
+
+button[aria-label="Remover Usuário"] {
+  background-color: rgb(182, 4, 4);
+  color: white;
+}
