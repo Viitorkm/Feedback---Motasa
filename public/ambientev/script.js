@@ -21,6 +21,7 @@ const btncreateUser = document.getElementById("btncreateUser");
 let users = [];
 
 function openPopup(message) {
+  // Cria o overlay e popup direto via innerHTML
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.top = '0';
@@ -33,48 +34,49 @@ function openPopup(message) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
+  overlay.innerHTML = `
+    <div style="
+      background: white;
+      padding: 20px 25px;
+      border-radius: 8px;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-align: left;
+      position: relative;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+    ">
+      <span id="closePopupBtn" style="
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #4E2A1E;
+      " title="Fechar">&times;</span>
+      <pre style="white-space: pre-wrap; margin-top: 30px;">${message}</pre>
+    </div>
+  `;
 
-  const popup = document.createElement('div');
-  popup.style.background = 'white';
-  popup.style.padding = '20px 25px';
-  popup.style.borderRadius = '8px';
-  popup.style.maxWidth = '90vw';
-  popup.style.maxHeight = '80vh';
-  popup.style.overflowY = 'auto';
-  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-  popup.style.textAlign = 'left';
-  popup.style.position = 'relative';
-  popup.style.wordBreak = 'break-word';
-  popup.style.overflowWrap = 'break-word';
+  document.body.appendChild(overlay);
 
-
-  const closeBtn = document.createElement('span');
-  closeBtn.innerHTML = '&times;';
-  closeBtn.style.position = 'absolute';
-  closeBtn.style.top = '10px';
-  closeBtn.style.right = '15px';
-  closeBtn.style.fontSize = '24px';
-  closeBtn.style.cursor = 'pointer';
-  closeBtn.style.color = '#4E2A1E';
-  closeBtn.title = "Fechar";
-
-  closeBtn.onclick = () => {
+  // Fecha popup ao clicar no X
+  overlay.querySelector('#closePopupBtn').onclick = () => {
     document.body.removeChild(overlay);
   };
 
-  const text = document.createElement('p');
-  text.textContent = message || 'Sem comentário';
-  text.style.color = '#333';
-  text.style.whiteSpace = 'pre-wrap';
-  text.style.lineHeight = '1.5';
-  text.style.fontSize = '15px';
-  text.style.margin = '0';
-
-  popup.appendChild(closeBtn);
-  popup.appendChild(text);
-  overlay.appendChild(popup);
-  document.body.appendChild(overlay);
+  // Fecha popup clicando fora da área do popup
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  };
 }
+
 
 
 
@@ -181,7 +183,13 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
-      <td data-label="Avaliações">${t.ratings || "-"}</td>
+      <td data-label="Avaliações">
+  <button class="avaliacoesBtn" data-id="${t.atendenteId}" title="Ver avaliações" 
+    style="background:#4E2A1E; border:none; color:#fff; padding:6px 10px; border-radius:4px; cursor:pointer;">
+    👁️
+  </button>
+</td>
+
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
         <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
