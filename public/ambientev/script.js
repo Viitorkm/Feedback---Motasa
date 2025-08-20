@@ -145,6 +145,7 @@ function loadFeedbacks() {
   fetch(url)
     .then(res => {
       if (!res.ok) throw new Error("Erro ao carregar dados");
+      console.log(error)
       return res.json();
     })
     .then(data => {
