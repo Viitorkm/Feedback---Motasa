@@ -72,12 +72,12 @@ function openPopup(message) {
   popup.style.flexDirection = 'column';
   popup.style.gap = '18px';
 
-  // Botão fechar fixo
+  // Botão fechar fixo no overlay
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
-  closeBtn.style.position = 'absolute';
-  closeBtn.style.top = '18px';
-  closeBtn.style.right = '24px';
+  closeBtn.style.position = 'fixed';
+  closeBtn.style.top = 'calc(50% - 40vh + 18px)';
+  closeBtn.style.right = 'calc(50% - 260px + 24px)';
   closeBtn.style.fontSize = '32px';
   closeBtn.style.cursor = 'pointer';
   closeBtn.style.color = '#4E2A1E';
@@ -89,7 +89,7 @@ function openPopup(message) {
   closeBtn.style.alignItems = 'center';
   closeBtn.style.justifyContent = 'center';
   closeBtn.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
-  closeBtn.style.zIndex = '1100';
+  closeBtn.style.zIndex = '1101';
   closeBtn.title = "Fechar";
   closeBtn.onclick = () => {
     document.body.removeChild(overlay);
@@ -109,11 +109,9 @@ function openPopup(message) {
   content.style.flexDirection = 'column';
   content.style.gap = '0';
 
-  // Sem avaliações
   if (!message || message.includes('Nenhuma avaliação')) {
     content.innerHTML = '<div style="text-align:center;color:#888;">Sem avaliações encontradas.</div>';
   } else {
-    // Quebra os cards pelo div principal
     const cards = message.split('<div style="margin-bottom:12px;">').filter(Boolean);
     cards.forEach((raw, idx) => {
       let html = raw.replace('</div>', '');
@@ -125,7 +123,6 @@ function openPopup(message) {
       const comment = commentMatch ? commentMatch[1] : 'Sem comentário';
       const date = dateMatch ? dateMatch[1] : '-';
 
-      // Card estilizado
       const card = document.createElement('div');
       card.style.background = '#f7f6f4';
       card.style.borderRadius = '14px';
@@ -138,7 +135,6 @@ function openPopup(message) {
       card.style.flexDirection = 'column';
       card.style.gap = '8px';
 
-      // Estrela visual
       const star = document.createElement('span');
       star.innerHTML = '⭐'.repeat(rating);
       star.style.fontSize = '22px';
@@ -147,7 +143,6 @@ function openPopup(message) {
       star.style.top = '18px';
       star.style.right = '18px';
 
-      // Conteúdo do card
       card.innerHTML = `
         <div style="font-weight:600;color:#4E2A1E;margin-bottom:8px;">Comentário #${idx + 1}</div>
         <div style="margin-bottom:6px;"><strong>Estrelas:</strong> ${rating}</div>
@@ -156,7 +151,6 @@ function openPopup(message) {
       `;
       card.appendChild(star);
 
-      // Separador visual entre cards
       if (idx > 0) {
         const separator = document.createElement('div');
         separator.style.height = '3px';
@@ -170,10 +164,10 @@ function openPopup(message) {
     });
   }
 
-  popup.appendChild(closeBtn);
   popup.appendChild(title);
   popup.appendChild(content);
   overlay.appendChild(popup);
+  overlay.appendChild(closeBtn); // Adiciona o botão ao overlay, não ao popup
   document.body.appendChild(overlay);
 }
 
