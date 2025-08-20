@@ -141,6 +141,8 @@ function loadFeedbacks() {
 
   const queryString = buildQueryString();
   const url = `${BASE_API_URL}?${queryString}`;
+  //remover
+  console.log(url)
 
   fetch(url)
     .then(res => {
