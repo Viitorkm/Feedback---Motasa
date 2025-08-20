@@ -103,42 +103,49 @@ exports.handler = async function (event, context) {
     }
   }
 
-if (event.httpMethod === 'DELETE') {
-  const { id } = event.queryStringParameters || {};
+  if (event.httpMethod === 'DELETE') {
+    const { atendenteId, deleteFeedbacks } = event.queryStringParameters || {};
 
-  if (!id) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'ID do usuário é obrigatório para exclusão' }),
-    };
-  }
-
-  try {
-    const deletedUser = await userModel.findByIdAndDelete(id);
-
-    if (!deletedUser) {
+    if (!atendenteId) {
       return {
-        statusCode: 404,
+        statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'Usuário não encontrado' }),
+        body: JSON.stringify({ error: 'ID do atendente é obrigatório para exclusão' }),
       };
     }
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ message: 'Usuário deletado com sucesso', user: deletedUser }),
-    };
+    try {
+      // Remove usuário pelo atendenteId
+      const deletedUser = await userModel.findOneAndDelete({ atendenteId: Number(atendenteId) });
 
-  } catch (err) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'Erro ao deletar usuário' }),
-    };
+      if (!deletedUser) {
+        return {
+          statusCode: 404,
+          headers,
+          body: JSON.stringify({ error: 'Usuário não encontrado' }),
+        };
+      }
+
+      // Se solicitado, remove feedbacks vinculados
+      if (deleteFeedbacks === 'true') {
+        const Feedback = require('./models/Feedback');
+        await Feedback.deleteMany({ vendedor: String(atendenteId) });
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ message: 'Usuário deletado com sucesso', user: deletedUser }),
+      };
+
+    } catch (err) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Erro ao deletar usuário' }),
+      };
+    }
   }
-}
 
   // Outros métodos não permitidos
   return {
