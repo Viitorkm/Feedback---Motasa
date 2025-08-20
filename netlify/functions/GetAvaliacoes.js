@@ -5,7 +5,7 @@ require('dotenv').config();
 let dbConnected = false;
 
 const allowedOrigins = [
-  'https://motasafeedback.netlify.app',
+  'https://feedbackmotasa.netlify.app',
 ];
 
 exports.handler = async function(event, context) {
