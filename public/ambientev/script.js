@@ -138,7 +138,7 @@ function openPopup(message) {
       card.innerHTML = `
         <div style="font-weight:600;color:#4E2A1E;margin-bottom:8px;">Comentário #${idx + 1}</div>
         <div style="margin-bottom:6px;"><strong>Estrelas:</strong> ${rating}</div>
-        <div style="margin-bottom:6px;"><strong>Comentário:</strong> ${comment}</div>
+        <div style="margin-bottom:6px;word-break:break-word;"><strong>Comentário:</strong> ${comment}</div>
         <div style="margin-bottom:0;"><strong>Data:</strong> ${date}</div>
       `;
       card.appendChild(star);
