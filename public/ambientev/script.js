@@ -311,6 +311,8 @@ function openPopupUser() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ atendenteId: Number(atendenteId), company }),
       });
+      console.log(response)
+      console.log(response.ok)
       if (!response.ok) throw new Error('Erro ao cadastrar usuário.');
 
       alert('Usuário cadastrado com sucesso!');
