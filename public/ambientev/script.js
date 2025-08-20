@@ -182,7 +182,6 @@ function renderTable(data) {
         </button>
       </td>
       <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
-      <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
 
     const btn = tr.querySelector('.commentBtn');
