@@ -58,8 +58,8 @@ exports.handler = async function (event, context) {
     // Monta filtros opcionais
     const filters = {};
 
-    if (params.vendedor) {
-      filters.vendedor = params.vendedor;  // busca exata
+    if (params.atendenteId) {
+      filters.atendenteId = params.atendenteId;  // busca exata
     }
     if (params.startDate) {
       filters.created_at = filters.created_at || {};
