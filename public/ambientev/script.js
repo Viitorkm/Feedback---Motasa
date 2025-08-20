@@ -21,7 +21,6 @@ const btncreateUser = document.getElementById("btncreateUser");
 let users = [];
 
 function openPopup(message) {
-  // Cria o overlay e popup direto via innerHTML
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.top = '0';
@@ -34,51 +33,46 @@ function openPopup(message) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
-  overlay.innerHTML = `
-    <div style="
-      background: white;
-      padding: 20px 25px;
-      border-radius: 8px;
-      max-width: 90vw;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      text-align: left;
-      position: relative;
-      word-break: break-word;
-      overflow-wrap: break-word;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 14px;
-    ">
-      <span id="closePopupBtn" style="
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
-        cursor: pointer;
-        color: #4E2A1E;
-      " title="Fechar">&times;</span>
-      <pre style="white-space: pre-wrap; margin-top: 30px;">${message}</pre>
-    </div>
-  `;
+  const popup = document.createElement('div');
+  popup.style.background = 'white';
+  popup.style.padding = '20px 25px';
+  popup.style.borderRadius = '8px';
+  popup.style.maxWidth = '90vw';
+  popup.style.maxHeight = '80vh';
+  popup.style.overflowY = 'auto';
+  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+  popup.style.textAlign = 'left';
+  popup.style.position = 'relative';
+  popup.style.wordBreak = 'break-word';
+  popup.style.overflowWrap = 'break-word';
 
-  document.body.appendChild(overlay);
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '15px';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
 
-  // Fecha popup ao clicar no X
-  overlay.querySelector('#closePopupBtn').onclick = () => {
+  closeBtn.onclick = () => {
     document.body.removeChild(overlay);
   };
 
-  // Fecha popup clicando fora da área do popup
-  overlay.onclick = (e) => {
-    if (e.target === overlay) {
-      document.body.removeChild(overlay);
-    }
-  };
+  const text = document.createElement('p');
+  text.textContent = message || 'Sem comentário';
+  text.style.color = '#333';
+  text.style.whiteSpace = 'pre-wrap';
+  text.style.lineHeight = '1.5';
+  text.style.fontSize = '15px';
+  text.style.margin = '0';
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(text);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
 }
-
-
-
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
@@ -133,7 +127,6 @@ function buildQueryString() {
   return params.toString();
 }
 
-
 function loadFeedbacks() {
   if (!validateFilters()) return;
 
@@ -175,6 +168,39 @@ function loadFeedbacks() {
     });
 }
 
+function attachAvaliacoesButtons() {
+  document.querySelectorAll('.avaliacoesBtn').forEach(btn => {
+    btn.onclick = async () => {
+      const atendenteId = btn.getAttribute('data-id');
+      if (!atendenteId) {
+        openPopup('ID do atendente não encontrado.');
+        return;
+      }
+      try {
+        const res = await fetch(`/.netlify/functions/GetAvaliacoes?id=${encodeURIComponent(atendenteId)}`);
+        if (!res.ok) throw new Error('Erro ao carregar avaliações.');
+
+        const data = await res.json();
+
+        if (!data.feedbacks || data.feedbacks.length === 0) {
+          openPopup('Nenhuma avaliação encontrada para este atendente.');
+          return;
+        }
+
+        const mensagens = data.feedbacks.map(fb => {
+          const dataFormatada = formatDateBR(fb.created_at || fb.createdAt || fb.date || '');
+          return `⭐ Nota: ${fb.rating}\nComentário: ${fb.comment || 'Sem comentário'}\nData: ${dataFormatada}`;
+        }).join('\n\n');
+
+        openPopup(mensagens);
+
+      } catch (error) {
+        openPopup('Erro ao carregar avaliações: ' + error.message);
+      }
+    };
+  });
+}
+
 function renderTable(data) {
   tableBody.innerHTML = "";
   data.forEach(t => {
@@ -184,12 +210,11 @@ function renderTable(data) {
       <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
       <td data-label="Avaliações">
-  <button class="avaliacoesBtn" data-id="${t.atendenteId}" title="Ver avaliações" 
-    style="background:#4E2A1E; border:none; color:#fff; padding:6px 10px; border-radius:4px; cursor:pointer;">
-    👁️
-  </button>
-</td>
-
+        <button class="avaliacoesBtn" data-id="${t.atendenteId}" title="Ver avaliações" 
+          style="background:#4E2A1E; border:none; color:#fff; padding:6px 10px; border-radius:4px; cursor:pointer;">
+          👁️
+        </button>
+      </td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
         <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
@@ -217,9 +242,9 @@ function renderTable(data) {
 
     tableBody.appendChild(tr);
   });
+
+  attachAvaliacoesButtons();
 }
-
-
 
 function openPopupUser() {
   const overlay = document.createElement('div');
@@ -232,18 +257,34 @@ function openPopupUser() {
   overlay.style.display = 'flex';
   overlay.style.alignItems = 'center';
   overlay.style.justifyContent = 'center';
-  overlay.style.zIndex = '1000';
+  overlay.style.zIndex = 9999;
 
   const popup = document.createElement('div');
-  popup.style.background = 'white';
+  popup.style.background = '#fff';
   popup.style.padding = '20px 25px';
   popup.style.borderRadius = '8px';
-  popup.style.maxWidth = '400px';
+  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
   popup.style.width = '90vw';
-  popup.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.1)';
-  popup.style.position = 'relative';
+  popup.style.maxWidth = '400px';
 
-  // Botão fechar
+  const form = document.createElement('form');
+  form.id = 'popupForm';
+
+  form.innerHTML = `
+    <label for="atendenteId">Atendente ID</label>
+    <input type="text" id="atendenteId" name="atendenteId" required>
+    <label for="company">Empresa/Nome</label>
+    <input type="text" id="company" name="company" required>
+    <button type="submit" style="margin-top:10px; background:#4E2A1E; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer;">Salvar</button>
+  `;
+
+  form.onsubmit = e => {
+    e.preventDefault();
+    // Implementar salvar usuário aqui, se quiser
+    alert('Função de salvar ainda não implementada.');
+    document.body.removeChild(overlay);
+  };
+
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.position = 'absolute';
@@ -257,169 +298,56 @@ function openPopupUser() {
     document.body.removeChild(overlay);
   };
 
-  // Título
-  const title = document.createElement('h2');
-  title.textContent = 'Cadastrar Usuário';
-  title.style.color = '#4E2A1E';
-  title.style.textAlign = 'center';
-  title.style.marginBottom = '20px';
-
-  // Formulário
-  const form = document.createElement('form');
-  form.style.display = 'flex';
-  form.style.flexDirection = 'column';
-  form.style.gap = '15px';
-
-  // Campo ID do Atendente
-  const labelAtendente = document.createElement('label');
-  labelAtendente.textContent = 'ID do Atendente:';
-  labelAtendente.htmlFor = 'inputAtendenteId';
-  labelAtendente.style.fontWeight = '600';
-
-  const inputAtendente = document.createElement('input');
-  inputAtendente.type = 'number';
-  inputAtendente.id = 'inputAtendenteId';
-  inputAtendente.name = 'atendenteId';
-  inputAtendente.required = true;
-  inputAtendente.style.padding = '8px 10px';
-  inputAtendente.style.border = '1px solid #ccc';
-  inputAtendente.style.borderRadius = '4px';
-
-  // Campo Empresa
-  const labelEmpresa = document.createElement('label');
-  labelEmpresa.textContent = 'Empresa:';
-  labelEmpresa.htmlFor = 'inputEmpresa';
-  labelEmpresa.style.fontWeight = '600';
-
-  const inputEmpresa = document.createElement('input');
-  inputEmpresa.type = 'text';
-  inputEmpresa.id = 'inputEmpresa';
-  inputEmpresa.name = 'company';
-  inputEmpresa.required = true;
-  inputEmpresa.style.padding = '8px 10px';
-  inputEmpresa.style.border = '1px solid #ccc';
-  inputEmpresa.style.borderRadius = '4px';
-
-  // Botão submit
-  const submitBtn = document.createElement('button');
-  submitBtn.type = 'submit';
-  submitBtn.textContent = 'Cadastrar';
-  submitBtn.style.backgroundColor = '#4E2A1E';
-  submitBtn.style.color = 'white';
-  submitBtn.style.padding = '10px';
-  submitBtn.style.border = 'none';
-  submitBtn.style.borderRadius = '4px';
-  submitBtn.style.cursor = 'pointer';
-  submitBtn.style.fontWeight = '600';
-
-  submitBtn.addEventListener('mouseover', () => {
-    submitBtn.style.backgroundColor = '#3e2216';
-  });
-  submitBtn.addEventListener('mouseout', () => {
-    submitBtn.style.backgroundColor = '#4E2A1E';
-  });
-
-  form.appendChild(labelAtendente);
-  form.appendChild(inputAtendente);
-  form.appendChild(labelEmpresa);
-  form.appendChild(inputEmpresa);
-  form.appendChild(submitBtn);
-
-  form.onsubmit = async (e) => {
-    e.preventDefault();
-    const atendenteId = inputAtendente.value.trim();
-    const company = inputEmpresa.value.trim();
-
-    if (!atendenteId || !company) {
-      alert('Preencha todos os campos!');
-      return;
-    }
-
-    try {
-      const response = await fetch('/.netlify/functions/Users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ atendenteId: Number(atendenteId), company }),
-      });
-      //remover
-      console.log(response)
-      console.log(response.ok)
-      if (!response.ok) throw new Error('Erro ao cadastrar usuário.');
-
-      alert('Usuário cadastrado com sucesso!');
-      document.body.removeChild(overlay);
-      loadFeedbacks(); // aqui atualiza a lista depois de criar o usuario
-    } catch (error) {
-      alert('Erro ao cadastrar usuário: ' + error.message);
-    }
-  };
-
   popup.appendChild(closeBtn);
-  popup.appendChild(title);
   popup.appendChild(form);
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const btncreateUser = document.getElementById('btncreateUser');
-  if (btncreateUser) {
-    btncreateUser.addEventListener('click', openPopupUser);
-  }
+btnFilter.addEventListener("click", () => {
+  loadFeedbacks();
 });
 
-function resetFilters() {
+btnReset.addEventListener("click", () => {
   filterVendedor.value = "";
   filterStartDate.value = "";
   filterEndDate.value = "";
-  message.textContent = "";
-  updateFilterButtonState();
   loadFeedbacks();
-}
+});
 
-function exportToCSV() {
-  if (!feedbacks.length) {
-    message.textContent = "Nada para exportar.";
+btnExport.addEventListener("click", () => {
+  if (!users || users.length === 0) {
+    alert("Nada para exportar!");
     return;
   }
-  const headers = ['Atendente', 'Empresa/Nome', 'Avaliacoes', 'Data', 'Link'];
-  const rows = users.map(u => [
-    u.atendenteId || '-',
-    u.empresa || '-',
-    u.avaliacoes || '-',
-    u.link || '-',
-    formatDateBR(u.created_at || u.createdAt || u.date),
-  ]);
 
-  let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+  let csv = "Atendente,Empresa/Nome,Data,Link\n";
+  users.forEach(t => {
+    const dataFormatada = formatDateBR(t.created_at || t.createdAt || t.date);
+    const line = `"${t.atendenteId || "-"}","${t.company || "-"}","${dataFormatada}","${t.link || "#"}"`;
+    csv += line + "\n";
+  });
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `feedbacks_${new Date().toISOString().slice(0,10)}.csv`;
-  a.style.display = 'none';
+  a.download = "usuarios.csv";
+  a.style.display = "none";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-// Eventos dos botões e inputs
-btnFilter.addEventListener('click', () => {
-  if (validateFilters()) loadFeedbacks();
 });
 
-btnReset.addEventListener('click', resetFilters);
+btncreateUser.addEventListener("click", () => {
+  openPopupUser();
+});
 
-btnExport.addEventListener('click', exportToCSV);
+// Atualiza estado do botão filtrar ao alterar filtros
+[filterVendedor, filterStartDate, filterEndDate].forEach(input => {
+  input.addEventListener('input', updateFilterButtonState);
+});
 
-btncreateUser.addEventListener('click', openPopupUser)
-
-filterVendedor.addEventListener('input', updateFilterButtonState);
-filterStartDate.addEventListener('input', updateFilterButtonState);
-filterEndDate.addEventListener('input', updateFilterButtonState);
-
-// Inicializa o carregamento dos feedbacks ao abrir a página
+updateFilterButtonState();
 loadFeedbacks();
