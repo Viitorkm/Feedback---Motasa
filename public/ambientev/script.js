@@ -517,7 +517,7 @@ btncreateUser.addEventListener('click', openPopupUser)
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
-filterEndDate.addEventListener('input', updateFilterButtonState;
+filterEndDate.addEventListener('input', updateFilterButtonState);
 
 // Inicializa o carregamento dos feedbacks ao abrir a página
 loadFeedbacks();
