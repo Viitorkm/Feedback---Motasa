@@ -185,9 +185,9 @@ function renderTable(data) {
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
         <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
-          style="background-color: #4E2A1E; border: none; color: white; font-size: 16px; padding: 6px 10px; border-radius: 4px; cursor: pointer;"
+          style="background-color: #000000ff; border: none; color: white; font-size: 16px; padding: 6px 10px; border-radius: 4px; cursor: pointer;"
           data-link="${t.link || '#'}">
-          📁
+          🔗
         </button>
       </td>
     `;
