@@ -178,7 +178,7 @@ function renderTable(data) {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td data-label="Atendente">${t.avaliadorId || "-"}</td>
+      <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
       <td data-label="Avaliações">${t.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
