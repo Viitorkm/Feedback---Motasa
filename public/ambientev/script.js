@@ -181,17 +181,11 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
-      <td data-label="Avaliações">
-  <button class="avaliacoesBtn" data-id="${t.atendenteId}" title="Ver avaliações" 
-    style="background:#4E2A1E; border:none; color:#fff; padding:6px 10px; border-radius:4px; cursor:pointer;">
-    👁️
-  </button>
-</td>
-
+      <td data-label="Avaliações">${t.ratings || "-"}</td>
       <td data-label="Data">${formatDateBR(t.created_at || t.createdAt || t.date)}</td>
       <td data-label="Link">
         <button class="copyBtn" title="Copiar link" aria-label="Copiar link"
-          style="background-color: #0000002d; border: none; color: white; font-size: 16px; padding: 6px 10px; border-radius: 4px; cursor: pointer;"
+          style="background-color: #0000004b; border: none; color: white; font-size: 16px; padding: 6px 10px; border-radius: 4px; cursor: pointer;"
           data-link="${t.link || '#'}">
           🔗
         </button>
