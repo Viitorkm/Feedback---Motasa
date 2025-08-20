@@ -3,6 +3,10 @@ const BASE_API_URL = "/.netlify/functions/relatorio";
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
 
+// REMOVI o bloqueio por falta do ID secreto
+// Antes tinha um if que bloqueava a página se não tivesse o ID.
+// Agora ele simplesmente não obriga o ID, então segue normalmente.
+
 const tableBody = document.querySelector("#feedbackTable tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
@@ -13,18 +17,70 @@ const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
 
-let users = [];
+let feedbacks = [];
+
+function openPopup(message) {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(0,0,0,0.4)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '1000';
+
+
+  const popup = document.createElement('div');
+  popup.style.background = 'white';
+  popup.style.padding = '20px 25px';
+  popup.style.borderRadius = '8px';
+  popup.style.maxWidth = '90vw';
+  popup.style.maxHeight = '80vh';
+  popup.style.overflowY = 'auto';
+  popup.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+  popup.style.textAlign = 'left';
+  popup.style.position = 'relative';
+  popup.style.wordBreak = 'break-word';
+  popup.style.overflowWrap = 'break-word';
+
+
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '15px';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
+
+  closeBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+
+  const text = document.createElement('p');
+  text.textContent = message || 'Sem comentário';
+  text.style.color = '#333';
+  text.style.whiteSpace = 'pre-wrap';
+  text.style.lineHeight = '1.5';
+  text.style.fontSize = '15px';
+  text.style.margin = '0';
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(text);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+
 
 function formatDateBR(dateStr) {
   const d = new Date(dateStr);
   if (isNaN(d)) return "-";
-  return d.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 function setButtonsDisabled(state) {
@@ -74,7 +130,8 @@ function buildQueryString() {
   return params.toString();
 }
 
-function loadUsers() {
+
+function loadFeedbacks() {
   if (!validateFilters()) return;
 
   setButtonsDisabled(true);
@@ -91,11 +148,11 @@ function loadUsers() {
       return res.json();
     })
     .then(data => {
-      users = data.data || [];
-      if (users.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
+      feedbacks = data.data || [];
+      if (feedbacks.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
       } else {
-        renderTable(users);
+        renderTable(feedbacks);
       }
       loading.style.display = "none";
       setButtonsDisabled(false);
@@ -111,18 +168,34 @@ function loadUsers() {
 
 function renderTable(data) {
   tableBody.innerHTML = "";
-  data.forEach(user => {
+  data.forEach(fb => {
     const tr = document.createElement("tr");
+
     tr.innerHTML = `
-      <td data-label="Atendente">${user.avaliadorId || "-"}</td>
-      <td data-label="Empresa/Nome">${user.company || "-"}</td>
-      <td data-label="Avaliações">${user.ratings || "-"}</td>
-      <td data-label="Data">${formatDateBR(user.data)}</td>
-      <td data-label="Link">${(user.link && user.link.length > 0) ? `<a href="${user.link[0]}" target="_blank">Ver link</a>` : "-"}</td>
+      <td data-label="Atendente">${fb.vendedor || "-"}</td>
+      <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
+      <td data-label="Estrelas">${fb.rating || "-"}</td>
+      <td data-label="Comentário">
+        <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário"
+          style="background-color: #4E2A1E; border: none; color: white; font-size: 14px; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
+          👁️
+        </button>
+      </td>
+      <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
+      <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
+
+    const btn = tr.querySelector('.commentBtn');
+    btn.addEventListener('click', () => {
+      const comentario = fb.comentario || fb.comment || "Sem comentário";
+      openPopup(comentario);
+    });
+
     tableBody.appendChild(tr);
   });
 }
+
+
 
 function resetFilters() {
   filterVendedor.value = "";
@@ -130,22 +203,22 @@ function resetFilters() {
   filterEndDate.value = "";
   message.textContent = "";
   updateFilterButtonState();
-  loadUsers();
+  loadFeedbacks();
 }
 
 function exportToCSV() {
-  if (!users.length) {
+  if (!feedbacks.length) {
     message.textContent = "Nada para exportar.";
     return;
   }
-
-  const headers = ['Atendente', 'Empresa/Nome', 'Avaliações', 'Data', 'Link'];
-  const rows = users.map(user => [
-    user.avaliadorId || '-',
-    user.company || '-',
-    user.ratings || '-',
-    formatDateBR(user.data),
-    user.link && user.link.length > 0 ? user.link[0] : '-'
+  const headers = ['Atendente', 'Empresa/Nome', 'Estrelas', 'Comentário', 'Data', 'IP'];
+  const rows = feedbacks.map(fb => [
+    fb.vendedor || '-',
+    fb.empresa || '-',
+    fb.rating || '-',
+    `"${(fb.comment || '-').replace(/"/g, '""')}"`,
+    formatDateBR(fb.created_at || fb.createdAt || fb.date),
+    fb.ip_address || '-'
   ]);
 
   let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
@@ -155,7 +228,7 @@ function exportToCSV() {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `usuarios_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `feedbacks_${new Date().toISOString().slice(0,10)}.csv`;
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -163,16 +236,18 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
-// Eventos
+// Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
-  if (validateFilters()) loadUsers();
+  if (validateFilters()) loadFeedbacks();
 });
+
 btnReset.addEventListener('click', resetFilters);
+
 btnExport.addEventListener('click', exportToCSV);
 
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
 filterEndDate.addEventListener('input', updateFilterButtonState);
 
-// Carrega dados ao iniciar
-loadUsers();
+// Inicializa o carregamento dos feedbacks ao abrir a página
+loadFeedbacks();

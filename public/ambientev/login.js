@@ -18,7 +18,7 @@ form.addEventListener("submit", async function (e) {
 
     if (res.ok) {
       sessionStorage.setItem("token", data.token);
-      window.location.href = "/relatorios/relatorios.html";
+      window.location.href = "/usuarios/usuarios.html";
 
     } else {
       error.textContent = data.error || "Erro no login";
