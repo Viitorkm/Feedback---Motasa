@@ -73,6 +73,7 @@ exports.handler = async function (event, context) {
     // Busca os usuários filtrados no banco
     const users = await userModel.find(filters).sort({ created_at: -1 }).lean();
 
+    console.log('Usuários encontrados:', users);
     return {
       statusCode: 200,
       headers,
