@@ -611,7 +611,6 @@ function resetFilters() {
 }
 
 function exportToCSV() {
-  console.log("invocado")
   if (!users.length) {
     message.textContent = "Nada para exportar.";
     return;
@@ -619,7 +618,7 @@ function exportToCSV() {
   const headers = ['Atendente', 'Empresa/Nome', 'Avaliacoes', 'Data', 'Link'];
   const rows = users.map(u => [
     u.atendenteId || '-',
-    u.empresa || '-',
+    u.company || '-',
     u.avaliacoes || '-',
     u.link || '-',
     formatDateBR(u.created_at || u.createdAt || u.date),
