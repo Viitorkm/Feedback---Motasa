@@ -162,6 +162,7 @@ function loadFeedbacks() {
     .catch(err => {
       loading.style.display = "none";
       message.textContent = err.message || "Erro ao carregar dados.";
+      console.error(err);
       setButtonsDisabled(false);
       updateFilterButtonState();
     });
