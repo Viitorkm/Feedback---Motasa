@@ -374,9 +374,6 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
-function openPopupUser() { 
-  
-}
 // Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
   if (validateFilters()) loadFeedbacks();
