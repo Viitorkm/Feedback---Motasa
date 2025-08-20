@@ -574,13 +574,13 @@ function openPopupDeleteUser() {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Erro ao remover usuário.');
+      if (!response.ok) throw new Error('O usuário não existe.');
 
       alert('Usuário removido com sucesso!');
       document.body.removeChild(overlay);
       loadFeedbacks(); // Atualiza lista
     } catch (error) {
-      alert('Erro ao remover usuário: ' + error.message);
+      alert('O Usuário não existe');
     }
   };
 
