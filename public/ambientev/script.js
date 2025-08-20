@@ -1,4 +1,4 @@
-const BASE_API_URL = "/.netlify/functions/relatorio";
+const BASE_API_URL = "/.netlify/functions/Users";
 
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
