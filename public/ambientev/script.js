@@ -17,6 +17,7 @@ const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
 const btncreateUser = document.getElementById("btncreateUser");
+const btnremoveUser = document.getElementById("btnremoveUser");
 
 let users = [];
 
@@ -459,12 +460,146 @@ function openPopupUser() {
   document.body.appendChild(overlay);
 }
 
+function openPopupDeleteUser() {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(0,0,0,0.4)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '1000';
+
+  const popup = document.createElement('div');
+  popup.style.background = 'white';
+  popup.style.padding = '20px 25px';
+  popup.style.borderRadius = '8px';
+  popup.style.maxWidth = '400px';
+  popup.style.width = '90vw';
+  popup.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.1)';
+  popup.style.position = 'relative';
+
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '15px';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
+  closeBtn.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+
+  const title = document.createElement('h2');
+  title.textContent = 'Remover Usuário';
+  title.style.color = '#4E2A1E';
+  title.style.textAlign = 'center';
+  title.style.marginBottom = '20px';
+
+  const form = document.createElement('form');
+  form.style.display = 'flex';
+  form.style.flexDirection = 'column';
+  form.style.gap = '15px';
+
+  const labelAtendente = document.createElement('label');
+  labelAtendente.textContent = 'ID do Atendente:';
+  labelAtendente.htmlFor = 'inputDeleteAtendenteId';
+  labelAtendente.style.fontWeight = '600';
+
+  const inputAtendente = document.createElement('input');
+  inputAtendente.type = 'number';
+  inputAtendente.id = 'inputDeleteAtendenteId';
+  inputAtendente.name = 'atendenteId';
+  inputAtendente.required = true;
+  inputAtendente.style.padding = '8px 10px';
+  inputAtendente.style.border = '1px solid #ccc';
+  inputAtendente.style.borderRadius = '4px';
+
+  const checkboxWrapper = document.createElement('label');
+  checkboxWrapper.style.display = 'flex';
+  checkboxWrapper.style.alignItems = 'center';
+  checkboxWrapper.style.gap = '8px';
+  checkboxWrapper.style.fontWeight = '600';
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.id = 'deleteFeedbacks';
+
+  const checkboxText = document.createTextNode('Apagar também as avaliações');
+
+  checkboxWrapper.appendChild(checkbox);
+  checkboxWrapper.appendChild(checkboxText);
+
+  const submitBtn = document.createElement('button');
+  submitBtn.type = 'submit';
+  submitBtn.textContent = 'Remover';
+  submitBtn.style.backgroundColor = '#4E2A1E';
+  submitBtn.style.color = 'white';
+  submitBtn.style.padding = '10px';
+  submitBtn.style.border = 'none';
+  submitBtn.style.borderRadius = '4px';
+  submitBtn.style.cursor = 'pointer';
+  submitBtn.style.fontWeight = '600';
+
+  submitBtn.addEventListener('mouseover', () => {
+    submitBtn.style.backgroundColor = '#3e2216';
+  });
+  submitBtn.addEventListener('mouseout', () => {
+    submitBtn.style.backgroundColor = '#4E2A1E';
+  });
+
+  form.appendChild(labelAtendente);
+  form.appendChild(inputAtendente);
+  form.appendChild(checkboxWrapper);
+  form.appendChild(submitBtn);
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const atendenteId = inputAtendente.value.trim();
+    const deleteAvaliacoes = checkbox.checked;
+
+    if (!atendenteId) {
+      alert('Informe o ID do atendente!');
+      return;
+    }
+
+    try {
+      const url = `${BASE_API_URL}?id=${atendenteId}&deleteFeedbacks=${deleteAvaliacoes}`;
+      const response = await fetch(url, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Erro ao remover usuário.');
+
+      alert('Usuário removido com sucesso!');
+      document.body.removeChild(overlay);
+      loadFeedbacks(); // Atualiza lista
+    } catch (error) {
+      alert('Erro ao remover usuário: ' + error.message);
+    }
+  };
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(title);
+  popup.appendChild(form);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const btncreateUser = document.getElementById('btncreateUser');
   if (btncreateUser) {
     btncreateUser.addEventListener('click', openPopupUser);
   }
 });
+
+btnremoveUser.addEventListener('click', openPopupDeleteUser);
 
 function resetFilters() {
   filterVendedor.value = "";

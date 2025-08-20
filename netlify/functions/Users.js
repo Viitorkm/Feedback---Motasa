@@ -103,6 +103,43 @@ exports.handler = async function (event, context) {
     }
   }
 
+if (event.httpMethod === 'DELETE') {
+  const { id } = event.queryStringParameters || {};
+
+  if (!id) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'ID do usuário é obrigatório para exclusão' }),
+    };
+  }
+
+  try {
+    const deletedUser = await userModel.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({ error: 'Usuário não encontrado' }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ message: 'Usuário deletado com sucesso', user: deletedUser }),
+    };
+
+  } catch (err) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Erro ao deletar usuário' }),
+    };
+  }
+}
+
   // Outros métodos não permitidos
   return {
     statusCode: 405,
@@ -110,4 +147,3 @@ exports.handler = async function (event, context) {
     body: JSON.stringify({ error: 'Método não permitido' }),
   };
 };
-
