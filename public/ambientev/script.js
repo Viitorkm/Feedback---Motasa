@@ -215,7 +215,7 @@ function updateFilterButtonState() {
 function buildQueryString() {
   const params = new URLSearchParams();
   if (filterVendedor.value.trim() !== "") {
-    params.append("vendedor", filterVendedor.value.trim());
+    params.append("atendenteId", filterVendedor.value.trim());
   }
   if (filterStartDate.value) {
     params.append("startDate", filterStartDate.value);
