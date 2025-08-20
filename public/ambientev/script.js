@@ -44,6 +44,7 @@ function popupRating(userId) {
 }
 
 function openPopup(message) {
+  // Overlay escuro
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.top = '0';
@@ -56,12 +57,13 @@ function openPopup(message) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
+  // Popup central
   const popup = document.createElement('div');
   popup.style.background = '#fff';
-  popup.style.padding = '32px 24px';
-  popup.style.borderRadius = '16px';
-  popup.style.maxWidth = '500px';
-  popup.style.width = '90vw';
+  popup.style.padding = '32px 24px 24px 24px';
+  popup.style.borderRadius = '18px';
+  popup.style.maxWidth = '520px';
+  popup.style.width = '95vw';
   popup.style.maxHeight = '80vh';
   popup.style.overflowY = 'auto';
   popup.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
@@ -70,20 +72,30 @@ function openPopup(message) {
   popup.style.flexDirection = 'column';
   popup.style.gap = '18px';
 
+  // Botão fechar fixo
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.position = 'absolute';
   closeBtn.style.top = '18px';
   closeBtn.style.right = '24px';
-  closeBtn.style.fontSize = '28px';
+  closeBtn.style.fontSize = '32px';
   closeBtn.style.cursor = 'pointer';
   closeBtn.style.color = '#4E2A1E';
+  closeBtn.style.background = '#fff';
+  closeBtn.style.borderRadius = '50%';
+  closeBtn.style.width = '40px';
+  closeBtn.style.height = '40px';
+  closeBtn.style.display = 'flex';
+  closeBtn.style.alignItems = 'center';
+  closeBtn.style.justifyContent = 'center';
+  closeBtn.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
+  closeBtn.style.zIndex = '1100';
   closeBtn.title = "Fechar";
   closeBtn.onclick = () => {
     document.body.removeChild(overlay);
   };
 
-  // Título do popup
+  // Título
   const title = document.createElement('h2');
   title.textContent = 'Avaliações do Atendente';
   title.style.margin = '0 0 12px 0';
@@ -97,16 +109,14 @@ function openPopup(message) {
   content.style.flexDirection = 'column';
   content.style.gap = '0';
 
-  // Se não houver avaliações
+  // Sem avaliações
   if (!message || message.includes('Nenhuma avaliação')) {
     content.innerHTML = '<div style="text-align:center;color:#888;">Sem avaliações encontradas.</div>';
   } else {
     // Quebra os cards pelo div principal
     const cards = message.split('<div style="margin-bottom:12px;">').filter(Boolean);
     cards.forEach((raw, idx) => {
-      // Remove o fechamento do div se existir
       let html = raw.replace('</div>', '');
-      // Extrai dados
       const ratingMatch = html.match(/Estrelas:<\/strong>\s*(\d+)/);
       const commentMatch = html.match(/Comentário:<\/strong>\s*([^<]*)/);
       const dateMatch = html.match(/Data:<\/strong>\s*([^<]*)/);
@@ -118,12 +128,15 @@ function openPopup(message) {
       // Card estilizado
       const card = document.createElement('div');
       card.style.background = '#f7f6f4';
-      card.style.borderRadius = '12px';
-      card.style.padding = '18px 16px';
+      card.style.borderRadius = '14px';
+      card.style.padding = '20px 16px';
       card.style.boxShadow = '0 2px 8px rgba(78,42,30,0.10)';
       card.style.border = '2px solid #e0d7cf';
-      card.style.margin = '0 0 18px 0';
+      card.style.margin = '0 0 24px 0';
       card.style.position = 'relative';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.style.gap = '8px';
 
       // Estrela visual
       const star = document.createElement('span');
@@ -138,7 +151,7 @@ function openPopup(message) {
       card.innerHTML = `
         <div style="font-weight:600;color:#4E2A1E;margin-bottom:8px;">Comentário #${idx + 1}</div>
         <div style="margin-bottom:6px;"><strong>Estrelas:</strong> ${rating}</div>
-        <div style="margin-bottom:6px;word-break:break-word;"><strong>Comentário:</strong> ${comment}</div>
+        <div style="margin-bottom:6px;word-break:break-word;white-space:pre-line;"><strong>Comentário:</strong> ${comment}</div>
         <div style="margin-bottom:0;"><strong>Data:</strong> ${date}</div>
       `;
       card.appendChild(star);
@@ -146,9 +159,10 @@ function openPopup(message) {
       // Separador visual entre cards
       if (idx > 0) {
         const separator = document.createElement('div');
-        separator.style.height = '2px';
-        separator.style.background = '#e0d7cf';
-        separator.style.margin = '0 0 18px 0';
+        separator.style.height = '3px';
+        separator.style.background = 'linear-gradient(90deg,#e0d7cf 0%,#fff 100%)';
+        separator.style.margin = '0 0 24px 0';
+        separator.style.borderRadius = '2px';
         content.appendChild(separator);
       }
 
