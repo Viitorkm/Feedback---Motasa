@@ -30,11 +30,11 @@ exports.handler = async function (event, context) {
     };
   }
 
-  if (event.httpMethod !== 'GET') {
+  if (event.httpMethod !== 'GET' || event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ error: 'Method not allowed, use GET' }),
+      body: JSON.stringify({ error: 'Method not allowed, use GET or POST' }),
     };
   }
 
@@ -61,16 +61,18 @@ exports.handler = async function (event, context) {
     filters.atendenteId = Number(params.atendenteId);  // cuidado com tipo
     }
     if (params.startDate) {
-    filters.data = filters.data || {};
-    filters.data.$gte = new Date(params.startDate);
+    filters.created_at = filters.created_at || {};
+    filters.created_at.$gte = new Date(params.startDate);
     }
     if (params.endDate) {
-    filters.data = filters.data || {};
-    filters.data.$lte = new Date(params.endDate);
+    filters.created_at = filters.created_at || {};
+    filters.created_at.$lte = new Date(params.endDate);
     }
 
+
     // Busca os usuários filtrados no banco
-    const users = await userModel.find(filters).sort({ data: -1 }).lean();
+    const users = await userModel.find(filters).sort({ created_at: -1 }).lean();
+
 
     
 
