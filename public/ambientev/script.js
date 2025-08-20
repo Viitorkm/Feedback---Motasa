@@ -612,7 +612,7 @@ function resetFilters() {
 
 function exportToCSV() {
   console.log("invocado")
-  if (!feedbacks.length) {
+  if (!users.length) {
     message.textContent = "Nada para exportar.";
     return;
   }
