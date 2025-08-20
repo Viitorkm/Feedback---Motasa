@@ -641,6 +641,7 @@ function exportToCSV() {
 
 // Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
+  console.log(filterVendedor)
   if (validateFilters()) loadFeedbacks();
 });
 
