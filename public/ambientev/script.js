@@ -7,7 +7,7 @@ const SECRET_ID = urlParams.get("id");
 // Antes tinha um if que bloqueava a página se não tivesse o ID.
 // Agora ele simplesmente não obriga o ID, então segue normalmente.
 
-const tableBody = document.querySelector("#feedbackTable tbody");
+const tableBody = document.querySelector("#usersTable tbody");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
 const filterVendedor = document.getElementById("filterVendedor");
@@ -17,7 +17,7 @@ const btnFilter = document.getElementById("btnFilter");
 const btnReset = document.getElementById("btnReset");
 const btnExport = document.getElementById("btnExport");
 
-let feedbacks = [];
+let users = [];
 
 function openPopup(message) {
   const overlay = document.createElement('div');
@@ -148,11 +148,11 @@ function loadFeedbacks() {
       return res.json();
     })
     .then(data => {
-      feedbacks = data.data || [];
-      if (feedbacks.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum feedback encontrado.</td></tr>`;
+      users = data.data || [];
+      if (users.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
       } else {
-        renderTable(feedbacks);
+        renderTable(users);
       }
       loading.style.display = "none";
       setButtonsDisabled(false);
@@ -168,13 +168,13 @@ function loadFeedbacks() {
 
 function renderTable(data) {
   tableBody.innerHTML = "";
-  data.forEach(fb => {
+  data.forEach(t => {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
       <td data-label="Atendente">${fb.vendedor || "-"}</td>
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
-      <td data-label="Estrelas">${fb.rating || "-"}</td>
+      <td data-label="Link">${fb.link || "-"}</td>
       <td data-label="Comentário">
         <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário"
           style="background-color: #4E2A1E; border: none; color: white; font-size: 14px; padding: 6px 10px; border-radius: 4px; cursor: pointer;">
@@ -210,7 +210,7 @@ function exportToCSV() {
     message.textContent = "Nada para exportar.";
     return;
   }
-  const headers = ['Atendente', 'Empresa/Nome', 'Estrelas', 'Comentário', 'Data', 'IP'];
+  const headers = ['Atendente', 'Empresa/Nome', 'Avaliacoes', 'Data', 'Link'];
   const rows = feedbacks.map(fb => [
     fb.vendedor || '-',
     fb.empresa || '-',
