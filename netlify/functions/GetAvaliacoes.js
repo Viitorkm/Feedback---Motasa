@@ -84,3 +84,5 @@ exports.handler = async function(event, context) {
     };
   }
 };
+
+/.netlify/functions/GetAvaliacoes
