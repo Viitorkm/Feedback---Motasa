@@ -5,7 +5,12 @@ const UsersSchema = new mongoose.Schema({
   company: { type: String, default: "" },
   ratings: { type: String, default: "" },
   data: { type: Date, default: Date.now },
-  link: [{ type: String, default: `https://feedbackmotasa.netlify.app/?atendente=${avaliadorId}` }],
+  link: {
+    type: String,
+    default: function () {
+      return `https://feedbackmotasa.netlify.app/?atendente=${this.avaliadorId}`;
+    }
+  }
 });
 
 

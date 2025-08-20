@@ -140,7 +140,7 @@ function loadFeedbacks() {
   tableBody.innerHTML = "";
 
   const queryString = buildQueryString();
-  const url = `${BASE_API_URL}${queryString}`;
+  const url = `${BASE_API_URL}?${queryString}`;
   //remover
   console.log('Carregando feedbacks com URL:', url);
 
@@ -148,7 +148,7 @@ function loadFeedbacks() {
     .then(res => {
       //remover
       if (!res.ok) throw new Error("Erro ao carregar dados do usuário 1");
-      console.log(error)
+      console.log('Usuários encontrados:', users);
       return res.json();
     })
     .then(data => {
