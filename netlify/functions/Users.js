@@ -76,6 +76,7 @@ exports.handler = async function (event, context) {
 
     //remover
     console.log('Usuários encontrados:', users);
+    console.log('Modelo de Usuário:', userModel);
     return {
       statusCode: 200,
       headers,
