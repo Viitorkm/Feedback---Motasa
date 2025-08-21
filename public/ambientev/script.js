@@ -246,7 +246,7 @@ function loadFeedbacks() {
   fetch(url)
     .then(res => {
       //remover
-      if (!res.ok) throw new Error("Erro ao carregar dados do usuário 1");
+      if (!res.ok) throw new Error("Erro ao carregar dados do usuário");
       console.log('Usuários encontrados:', users);
       return res.json();
     })
