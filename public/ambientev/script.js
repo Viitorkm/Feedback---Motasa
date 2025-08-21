@@ -253,7 +253,7 @@ function loadFeedbacks() {
     .then(data => {
       users = data.data || [];
       if (users.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
       } else {
         renderTable(users);
       }
