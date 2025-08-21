@@ -26,6 +26,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const feedbackText = document.querySelector(".feedback-text").value.trim();
     const empresaInput = document.querySelector(".empresa-nome").value.trim();
 
+    // Captura o vendedor e armazena no banco
+    const urlParams = new URLSearchParams(window.location.search);
+    const vendedorId = urlParams.get("atendente");
+
+    // NOVA VALIDAÇÃO DO VENDEDOR NO BANCO
+    let vendedorValido = false;
+    try {
+      const res = await fetch(`/.netlify/functions/Users?atendenteId=${vendedorId}`);
+      const data = await res.json();
+      vendedorValido = Array.isArray(data.data) && data.data.length > 0;
+    } catch (e) {
+      vendedorValido = false;
+    }
+
+    if (!vendedorId || !vendedorValido) {
+      alert("Atendente inválido ou não cadastrado.");
+      return;
+    }
+
     if (!ratingInput) {
       submitBtn.style.display = "none";
       messageElement.textContent = "Por favor, selecione pelo menos uma estrela!";
@@ -43,19 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       return;
     }
-
-    //Captura o vendedor e armazena no banco
-    const urlParams = new URLSearchParams(window.location.search);
-    const vendedorId = urlParams.get("atendente");
-
-    // VALIDAÇÃO DO VENDEDOR - INÍCIO
-    const vendedorNum = Number(vendedorId);
-    if (!vendedorId || !vendedoresValidos.includes(vendedorNum)) {
-      alert("Atendente inválido ou não autorizado.");
-      return;
-    }
-    // VALIDAÇÃO DO VENDEDOR - FIM
-
 
     const feedback = {
       rating: parseInt(ratingInput.value),
