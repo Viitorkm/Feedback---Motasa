@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       comment: feedbackText,
       empresa: empresaInput,
       vendedor: vendedorId,
-      setor_id: setorInput // Adicionado
+      setor_nome: setorInput // Adicionado
     };
 
     messageElement.style.display = "none";
