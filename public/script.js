@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
       rating: parseInt(ratingInput.value),
       comment: feedbackText,
       empresa: empresaInput,
-      vendedor: vendedorId
+      vendedor: vendedorId,
+      setor_id: setorInput // Adicionado
     };
 
     messageElement.style.display = "none";
