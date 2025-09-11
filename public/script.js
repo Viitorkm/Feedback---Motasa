@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ratingInput = document.querySelector("input[name='rating']:checked");
     const feedbackText = document.querySelector(".feedback-text").value.trim();
     const empresaInput = document.querySelector(".empresa-nome").value.trim();
-    const setorInput = document.querySelector(".setor-nome").value.trim();
+    const setor_nome = document.querySelector(".setor-nome").value.trim();
 
     // Captura o vendedor e armazena no banco
     const urlParams = new URLSearchParams(window.location.search);
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       comment: feedbackText,
       empresa: empresaInput,
       vendedor: vendedorId,
-      setor_nome: setorInput // Adicionado
+      setor_nome: setor_nome
     };
 
     messageElement.style.display = "none";
