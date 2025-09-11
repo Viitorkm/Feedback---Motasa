@@ -48,7 +48,7 @@ exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
     console.log('Recebido no feedback:', body); // Adicione este log
 
-    const { rating, comment, empresa, vendedor, setor_id } = body;
+    const { rating, comment, empresa, vendedor, setor_nome } = body;
 
     const ipAddress = event.headers['x-forwarded-for'] || event.headers['client-ip'] || '';
 
