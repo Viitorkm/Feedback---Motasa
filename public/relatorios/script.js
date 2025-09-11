@@ -176,6 +176,7 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${fb.vendedor || "-"}</td>
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
+      <td data-label="Setor">${fb.setor_nome || "-"}</td> 
       <td data-label="Estrelas">${fb.rating || "-"}</td>
       <td data-label="Comentário">
         <button class="commentBtn" title="Ver comentário" aria-label="Ver comentário"
