@@ -279,6 +279,7 @@ function renderTable(data) {
     tr.innerHTML = `
       <td data-label="Atendente">${t.atendenteId || "-"}</td>
       <td data-label="Empresa/Nome">${t.company || "-"}</td>
+      <td data-label="Setor">${setor_id || "-"}</td>
       <td data-label="Avaliações">
         <button class="ratingBtn" style="background:#4E2A1E;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;">
           ⭐

@@ -62,6 +62,7 @@ exports.handler = async function (event, context) {
     const feedback = await Feedback.create({
       rating,
       comment,
+      setor_id,
       ip_address: ipAddress,
       created_at: new Date(),
       empresa: empresa || null,
