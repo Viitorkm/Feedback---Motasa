@@ -67,6 +67,7 @@ exports.handler = async function(event, context) {
     const formatted = feedbacks.map(fb => ({
       rating: fb.rating,
       comment: fb.comment,
+      setor_nome: fb.setor_nome,
       created_at: formatDateBR(fb.created_at),
     }));
 
