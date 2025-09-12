@@ -47,7 +47,7 @@ exports.handler = async function(event, context) {
     }
 
     const feedbacks = await Feedback.find({ vendedor: id })
-      .select('rating comment created_at setor_nome')
+      .select('rating comment setor_nome created_at')
       .sort({ created_at: -1 })
       .lean();
 
