@@ -121,10 +121,12 @@ function openPopup(message) {
       let html = raw.replace('</div>', '');
       const ratingMatch = html.match(/Estrelas:<\/strong>\s*(\d+)/);
       const commentMatch = html.match(/Comentário:<\/strong>\s*([^<]*)/);
+      const setor_nomeMatch = html.match(/Setor:<\/strong>\s*([^<]*)/);
       const dateMatch = html.match(/Data:<\/strong>\s*([^<]*)/);
 
       const rating = ratingMatch ? Number(ratingMatch[1]) : '-';
       const comment = commentMatch ? commentMatch[1] : 'Sem comentário';
+      const setor_nome = setor_nomeMatch ? setor_nomeMatch[1] : 'Sem Setor';
       const date = dateMatch ? dateMatch[1] : '-';
 
       const card = document.createElement('div');
