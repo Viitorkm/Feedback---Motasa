@@ -34,6 +34,7 @@ function popupRating(userId) {
           <div style="margin-bottom:12px;">
             <strong>Estrelas:</strong> ${fb.rating} <br>
             <strong>Comentário:</strong> ${fb.comment || "Sem comentário"} <br>
+            <strong>Setor:</strong> ${fb.setor_nome || "Sem Setor"} <br>
             <strong>Data:</strong> ${fb.created_at}
           </div>
         `).join("");
