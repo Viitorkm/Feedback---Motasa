@@ -46,13 +46,11 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Busca no Mongo todos feedbacks com vendedor == id
     const feedbacks = await Feedback.find({ vendedor: id })
-      .select('rating comment created_at')
+      .select('rating comment created_at setor_nome')
       .sort({ created_at: -1 })
       .lean();
 
-    // Formata a data para padrão BR
     const formatDateBR = (date) => {
       const d = new Date(date);
       return d.toLocaleDateString('pt-BR', {
