@@ -28,7 +28,7 @@ function popupRating(userId) {
     .then(data => {
       const feedbacks = data.feedbacks || [];
       if (feedbacks.length === 0) {
-        openPopup("Nenhuma avaliação encontrada para este atendente.");
+        openPopup("Nenhuma avaliação encontrada para este avaliador.");
       } else {
         // Monta HTML das avaliações
         const html = feedbacks.map(fb => `
@@ -101,7 +101,7 @@ function openPopup(message) {
 
   // Título
   const title = document.createElement('h2');
-  title.textContent = 'Avaliações do Atendente';
+  title.textContent = 'Avaliações do avaliador';
   title.style.margin = '0 0 12px 0';
   title.style.fontSize = '1.3rem';
   title.style.color = '#4E2A1E';
