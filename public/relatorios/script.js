@@ -174,7 +174,7 @@ function renderTable(data) {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td data-label="Atendente">${fb.vendedor || "-"}</td>
+      <td data-label="Avaliador">${fb.vendedor || "-"}</td>
       <td data-label="Empresa/Nome">${fb.empresa || "-"}</td>
       <td data-label="Setor">${fb.setor_nome || "-"}</td> 
       <td data-label="Estrelas">${fb.rating || "-"}</td>
