@@ -72,3 +72,10 @@ body {
   }
 }
 
+.login-container img {
+  display: block;
+  margin: 0 auto 1px auto; 
+  max-width: 180px;
+  height: auto;
+}
+

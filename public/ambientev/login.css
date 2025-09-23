@@ -9,7 +9,7 @@ body {
 }
 
 .login-container {
-  background: rgb(190, 190, 190);
+  background: rgb(255, 255, 255);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -74,7 +74,8 @@ body {
 
 .login-container img {
   display: block;
-  margin: 0 auto 18px auto;
+  margin: 0 auto 1px auto; 
   max-width: 180px;
+  height: auto;
 }
 
