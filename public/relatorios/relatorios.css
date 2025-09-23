@@ -109,6 +109,84 @@ tbody td {
   color: red;
 }
 
+.media-popup-content {
+  text-align: center;
+  padding: 0 6px;
+}
+
+.media-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.media-popup-media {
+  font-size: 48px;
+  color: #2196f3;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.media-star {
+  font-size: 28px;
+  color: #ccc;
+  margin-left: 2px;
+  transition: color 0.2s;
+}
+
+.media-star.filled {
+  color: #eead2d;
+}
+
+.media-popup-total {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 18px;
+}
+
+.media-popup-bars {
+  margin: 10px 0 0 0;
+}
+
+.media-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.media-bar-label {
+  width: 28px;
+  text-align: right;
+  font-size: 15px;
+  color: #4E2A1E;
+}
+
+.media-bar-bg {
+  flex: 1;
+  height: 14px;
+  background: #eee;
+  border-radius: 7px;
+  overflow: hidden;
+  margin: 0 6px;
+}
+
+.media-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #eead2d 60%, #ffe7a0 100%);
+  border-radius: 7px;
+  transition: width 0.3s;
+}
+
+.media-bar-count {
+  min-width: 18px;
+  text-align: left;
+  font-size: 15px;
+  color: #4E2A1E;
+}
+
 @media (max-width: 600px) {
   .filters {
     flex-direction: column;

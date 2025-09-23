@@ -241,8 +241,10 @@ function exportToCSV() {
 
 // Média das avaliações
 async function openMediaPopup() {
-  // Busca todos os feedbacks
-  let res = await fetch('/.netlify/functions/relatorio');
+  let token = sessionStorage.getItem("token");
+  let res = await fetch('/.netlify/functions/report', {
+    headers: { Authorization: 'Bearer ' + token }
+  });
   let data = await res.json();
   let feedbacks = data.data || [];
 
@@ -251,10 +253,9 @@ async function openMediaPopup() {
     return;
   }
 
-  // Calcula média e contagem de cada nota
   let total = feedbacks.length;
   let soma = 0;
-  let contagem = [0, 0, 0, 0, 0]; // índice 0 = 1 estrela, 4 = 5 estrelas
+  let contagem = [0, 0, 0, 0, 0];
 
   feedbacks.forEach(fb => {
     let r = Number(fb.rating);
@@ -267,30 +268,34 @@ async function openMediaPopup() {
   let media = soma / total;
   media = isNaN(media) ? 0 : media;
 
-  // Monta HTML do popup
   let starsHtml = '';
   for (let i = 1; i <= 5; i++) {
-    starsHtml += `<span style="font-size: 28px; color: ${i <= Math.round(media) ? '#eead2d' : '#ccc'};">&#9733;</span>`;
+    starsHtml += `<span class="media-star${i <= Math.round(media) ? ' filled' : ''}">&#9733;</span>`;
   }
 
-  let barras = '';
   let max = Math.max(...contagem, 1);
+  let barras = '';
   for (let i = 5; i >= 1; i--) {
     let width = (contagem[i - 1] / max) * 100;
     barras += `
-      <div style="display:flex;align-items:center;margin-bottom:2px;">
-        <div style="flex:1;height:6px;background:${contagem[i - 1] ? '#4E2A1E' : '#eee'};margin-right:8px;border-radius:3px;width:${width}%;"></div>
-        <span style="font-size:13px;color:#888;width:18px;display:inline-block;">${i} ★</span>
+      <div class="media-bar-row">
+        <span class="media-bar-label">${i}★</span>
+        <div class="media-bar-bg">
+          <div class="media-bar-fill" style="width:${width}%"></div>
+        </div>
+        <span class="media-bar-count">${contagem[i - 1]}</span>
       </div>
     `;
   }
 
   let html = `
-    <div style="text-align:center;">
-      <span style="font-size:48px;color:#2196f3;font-weight:600;">${media.toFixed(1)}</span>
-      ${starsHtml}
-      <div style="font-size:15px;color:#666;margin-bottom:10px;">${total} avaliação${total > 1 ? 's' : ''}</div>
-      <div style="margin:10px 0 0 0;">${barras}</div>
+    <div class="media-popup-content">
+      <div class="media-popup-header">
+        <span class="media-popup-media">${media.toFixed(1)}</span>
+        <span>${starsHtml}</span>
+      </div>
+      <div class="media-popup-total">${total} avaliação${total > 1 ? 's' : ''}</div>
+      <div class="media-popup-bars">${barras}</div>
     </div>
   `;
 
@@ -298,7 +303,6 @@ async function openMediaPopup() {
 }
 
 function showMediaPopup(contentHtml) {
-  // Cria overlay
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.top = 0;
@@ -311,7 +315,6 @@ function showMediaPopup(contentHtml) {
   overlay.style.justifyContent = 'center';
   overlay.style.zIndex = '1000';
 
-  // Cria popup
   const popup = document.createElement('div');
   popup.style.background = '#fff';
   popup.style.padding = '32px 24px 24px 24px';
@@ -322,7 +325,6 @@ function showMediaPopup(contentHtml) {
   popup.style.position = 'relative';
   popup.innerHTML = contentHtml;
 
-  // Botão fechar
   const closeBtn = document.createElement('span');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.position = 'absolute';
