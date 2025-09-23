@@ -9,7 +9,7 @@ body {
 }
 
 .login-container {
-  background: white;
+  background: rgb(190, 190, 190);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -70,5 +70,11 @@ body {
     font-size: 14px;
     padding: 0.5rem;
   }
+}
+
+.login-container img {
+  display: block;
+  margin: 0 auto 18px auto;
+  max-width: 180px;
 }
 

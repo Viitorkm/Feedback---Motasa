@@ -239,6 +239,106 @@ function exportToCSV() {
   URL.revokeObjectURL(url);
 }
 
+// Média das avaliações
+async function openMediaPopup() {
+  // Busca todos os feedbacks
+  let res = await fetch('/.netlify/functions/relatorio');
+  let data = await res.json();
+  let feedbacks = data.data || [];
+
+  if (!feedbacks.length) {
+    showMediaPopup("Nenhuma avaliação encontrada.");
+    return;
+  }
+
+  // Calcula média e contagem de cada nota
+  let total = feedbacks.length;
+  let soma = 0;
+  let contagem = [0, 0, 0, 0, 0]; // índice 0 = 1 estrela, 4 = 5 estrelas
+
+  feedbacks.forEach(fb => {
+    let r = Number(fb.rating);
+    if (r >= 1 && r <= 5) {
+      soma += r;
+      contagem[r - 1]++;
+    }
+  });
+
+  let media = soma / total;
+  media = isNaN(media) ? 0 : media;
+
+  // Monta HTML do popup
+  let starsHtml = '';
+  for (let i = 1; i <= 5; i++) {
+    starsHtml += `<span style="font-size: 28px; color: ${i <= Math.round(media) ? '#eead2d' : '#ccc'};">&#9733;</span>`;
+  }
+
+  let barras = '';
+  let max = Math.max(...contagem, 1);
+  for (let i = 5; i >= 1; i--) {
+    let width = (contagem[i - 1] / max) * 100;
+    barras += `
+      <div style="display:flex;align-items:center;margin-bottom:2px;">
+        <div style="flex:1;height:6px;background:${contagem[i - 1] ? '#4E2A1E' : '#eee'};margin-right:8px;border-radius:3px;width:${width}%;"></div>
+        <span style="font-size:13px;color:#888;width:18px;display:inline-block;">${i} ★</span>
+      </div>
+    `;
+  }
+
+  let html = `
+    <div style="text-align:center;">
+      <span style="font-size:48px;color:#2196f3;font-weight:600;">${media.toFixed(1)}</span>
+      ${starsHtml}
+      <div style="font-size:15px;color:#666;margin-bottom:10px;">${total} avaliação${total > 1 ? 's' : ''}</div>
+      <div style="margin:10px 0 0 0;">${barras}</div>
+    </div>
+  `;
+
+  showMediaPopup(html);
+}
+
+function showMediaPopup(contentHtml) {
+  // Cria overlay
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(0,0,0,0.4)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '1000';
+
+  // Cria popup
+  const popup = document.createElement('div');
+  popup.style.background = '#fff';
+  popup.style.padding = '32px 24px 24px 24px';
+  popup.style.borderRadius = '18px';
+  popup.style.maxWidth = '340px';
+  popup.style.width = '95vw';
+  popup.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
+  popup.style.position = 'relative';
+  popup.innerHTML = contentHtml;
+
+  // Botão fechar
+  const closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '10px';
+  closeBtn.style.right = '18px';
+  closeBtn.style.fontSize = '28px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#4E2A1E';
+  closeBtn.title = "Fechar";
+  closeBtn.onclick = () => document.body.removeChild(overlay);
+
+  popup.appendChild(closeBtn);
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
 // Eventos dos botões e inputs
 btnFilter.addEventListener('click', () => {
   if (validateFilters()) loadFeedbacks();
@@ -251,6 +351,9 @@ btnExport.addEventListener('click', exportToCSV);
 filterVendedor.addEventListener('input', updateFilterButtonState);
 filterStartDate.addEventListener('input', updateFilterButtonState);
 filterEndDate.addEventListener('input', updateFilterButtonState);
+
+// Adiciona evento ao botão
+document.getElementById('btnMediaAvaliacao').addEventListener('click', openMediaPopup);
 
 // Inicializa o carregamento dos feedbacks ao abrir a página
 loadFeedbacks();
