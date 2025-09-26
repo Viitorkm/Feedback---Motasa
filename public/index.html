@@ -41,7 +41,15 @@
         </div>
 
         <input type="text" class="empresa-nome" placeholder="Nome ou Empresa (opcional)">
-        <input type="text" class="setor-nome" placeholder="Nome do Setor">
+        <select class="setor-nome" required>
+          <option value="" disabled selected>Selecione o Setor</option>
+          <option value="RH">RH</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Logística">Logística</option>
+          <option value="Financeiro">Financeiro</option>
+          <option value="Pós-vendas">Pós-vendas</option>
+          <option value="Marketing">Marketing</option>
+        </select>
         <textarea class="feedback-text" placeholder="Deixe seu comentário aqui..."></textarea>
 
         <button class="submit-btn">Enviar Feedback</button>

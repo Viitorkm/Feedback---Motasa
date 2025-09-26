@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ratingInput = document.querySelector("input[name='rating']:checked");
     const feedbackText = document.querySelector(".feedback-text").value.trim();
     const empresaInput = document.querySelector(".empresa-nome").value.trim();
-    const setor_nome = document.querySelector(".setor-nome").value.trim();
+    const setor_nome = document.querySelector(".setor-nome").value;
 
     // Captura o vendedor e armazena no banco
     const urlParams = new URLSearchParams(window.location.search);
