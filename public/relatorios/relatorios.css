@@ -187,6 +187,11 @@ tbody td {
   color: #4E2A1E;
 }
 
+td[data-label="Setor"], th:nth-child(3) {
+  min-width: 120px;
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
   .filters {
     flex-direction: column;
