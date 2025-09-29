@@ -1,4 +1,4 @@
-const BASE_API_URL = "/.netlify/functions/relatorio";
+const BASE_API_URL = "/.netlify/functions/report"; // <-- Corrija aqui
 
 const urlParams = new URLSearchParams(window.location.search);
 const SECRET_ID = urlParams.get("id");
@@ -144,7 +144,13 @@ function loadFeedbacks() {
   //remover
   console.log(url)
 
-  fetch(url)
+  const token = sessionStorage.getItem("token");
+
+  fetch(url, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  })
     .then(res => {
       if (!res.ok) throw new Error("Erro ao carregar dados");
       return res.json();
