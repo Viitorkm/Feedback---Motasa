@@ -48,15 +48,15 @@ exports.handler = async function (event) {
   }
 
   try {
-    // Verifica token
-    jwt.verify(token, JWT_SECRET);
+    // Verifica token e pega setor
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userSetor = decoded.setor;
 
     if (!dbConnected) {
       await connectToDatabase();
       dbConnected = true;
     }
 
-    // Aqui você pode colocar filtros conforme seu código original
     const filters = {};
     const params = event.queryStringParameters || {};
     if (params.vendedor) filters.vendedor = params.vendedor;
@@ -67,6 +67,11 @@ exports.handler = async function (event) {
     if (params.endDate) {
       filters.created_at = filters.created_at || {};
       filters.created_at.$lte = new Date(params.endDate);
+    }
+
+    // Se não for admin, filtra pelo setor do usuário
+    if (userSetor && userSetor !== 'admin') {
+      filters.setor_nome = userSetor;
     }
 
     const feedbacks = await Feedback.find(filters).sort({ created_at: -1 }).lean();

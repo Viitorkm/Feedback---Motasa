@@ -3,10 +3,9 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const users = [
-  // Aqui coloque as senhas já "hashed" para segurança real
-  { username: 'admin', passwordHash: bcrypt.hashSync('1234', 8) },
-  { username: 'rh', passwordHash: bcrypt.hashSync('rh123', 8) },
-  { username: 'gestor', passwordHash: bcrypt.hashSync('gestor456', 8) },
+  { username: 'admin', passwordHash: bcrypt.hashSync('1234', 8), setor: 'admin' },
+  { username: 'rh', passwordHash: bcrypt.hashSync('rh123', 8), setor: 'RH' },
+  { username: 'gestor', passwordHash: bcrypt.hashSync('gestor456', 8), setor: 'Comercial' },
 ];
 
 // Chave secreta no .env para assinar o token JWT
@@ -39,7 +38,7 @@ exports.handler = async function (event) {
   }
 
   // Cria o token JWT com validade, ex: 1h
-  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ username, setor: user.setor }, JWT_SECRET, { expiresIn: '1h' });
 
   return {
     statusCode: 200,
