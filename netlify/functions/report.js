@@ -69,9 +69,9 @@ exports.handler = async function (event) {
       filters.created_at.$lte = new Date(params.endDate);
     }
 
-    // Se não for admin, filtra pelo setor do usuário
+    // Se não for admin, filtra pelo setor do usuário (case-insensitive)
     if (userSetor && userSetor !== 'admin') {
-      filters.setor_nome = userSetor;
+      filters.setor_nome = { $regex: new RegExp(`^${userSetor}$`, 'i') };
     }
 
     const feedbacks = await Feedback.find(filters).sort({ created_at: -1 }).lean();
