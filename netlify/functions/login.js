@@ -5,9 +5,9 @@ require('dotenv').config();
 const users = [
   { username: 'admin', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'admin' },
   { username: 'logistica', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
-  { username: 'financeiro', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
-  { username: 'posvendas', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
-  { username: 'marketing', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
+  { username: 'financeiro', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'Financeiro' },
+  { username: 'posvendas', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'Pós-vendas' },
+  { username: 'marketing', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'Marketing' },
   { username: 'comercial', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'Comercial' },
 ];
 
