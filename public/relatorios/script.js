@@ -220,10 +220,12 @@ function exportToCSV() {
     message.textContent = "Nada para exportar.";
     return;
   }
-  const headers = ['Atendente', 'Empresa/Nome', 'Estrelas', 'Comentário', 'Data', 'IP'];
+  // Cabeçalhos iguais à tabela
+  const headers = ['Avaliador', 'Empresa/Nome', 'Setor', 'Estrelas', 'Comentário', 'Data', 'IP'];
   const rows = feedbacks.map(fb => [
     fb.vendedor || '-',
     fb.empresa || '-',
+    fb.setor_nome || '-',
     fb.rating || '-',
     `"${(fb.comment || '-').replace(/"/g, '""')}"`,
     formatDateBR(fb.created_at || fb.createdAt || fb.date),
