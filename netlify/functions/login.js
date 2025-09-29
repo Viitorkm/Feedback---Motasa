@@ -3,9 +3,12 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const users = [
-  { username: 'admin', passwordHash: bcrypt.hashSync('1234', 8), setor: 'admin' },
-  { username: 'rh', passwordHash: bcrypt.hashSync('rh123', 8), setor: 'RH' },
-  { username: 'gestor', passwordHash: bcrypt.hashSync('gestor456', 8), setor: 'Comercial' },
+  { username: 'admin', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'admin' },
+  { username: 'logistica', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
+  { username: 'financeiro', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
+  { username: 'posvendas', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
+  { username: 'marketing', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'RH' },
+  { username: 'comercial', passwordHash: bcrypt.hashSync('senhamestre', 8), setor: 'Comercial' },
 ];
 
 // Chave secreta no .env para assinar o token JWT
