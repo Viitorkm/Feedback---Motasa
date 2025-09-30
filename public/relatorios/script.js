@@ -152,7 +152,7 @@ function loadFeedbacks() {
     }
   })
     .then(res => {
-      if (!res.ok) throw new Error("Erro ao carregar dados");
+      if (!res.ok) throw new Error("Erro ao carregar dados, Por favor, faça login novamente");
       return res.json();
     })
     .then(data => {
@@ -168,7 +168,7 @@ function loadFeedbacks() {
     })
     .catch(err => {
       loading.style.display = "none";
-      message.textContent = err.message || "Erro ao carregar dados.";
+      message.textContent = err.message || "Erro ao carregar dados, Por favor, faça login novamente";
       setButtonsDisabled(false);
       updateFilterButtonState();
     });
