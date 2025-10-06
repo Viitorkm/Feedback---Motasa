@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const UsersSchema = new mongoose.Schema({
-  atendenteId: { type: Number, required: true, unique: true },
+  atendenteId: { type: Number, required: true},
   company: { type: String, default: "" },
   ratings: { type: String, default: "" },
   created_at: { type: Date, default: Date.now },
