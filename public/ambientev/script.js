@@ -439,21 +439,18 @@ function openPopupUser() {
     }
 
     try {
-      const response = await fetch('/.netlify/functions/Users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ atendenteId: Number(atendenteId), company }),
-      });
-      //remover
-      console.log(response)
-      console.log(response.ok)
-      if (!response.ok) throw new Error(`Erro ao cadastrar usuário. ${error.message}`);
-
-      alert('Usuário cadastrado com sucesso!');
-      document.body.removeChild(overlay);
-      loadFeedbacks(); // aqui atualiza a lista depois de criar o usuario
+      const userData = {
+        atendenteId: Number(atendenteId),
+        company: company
+      };
+      
+      await createUser(userData);
+      // If successful, refresh the table or show success message
+      loadFeedbacks(); // Refresh the table
+      openPopup('Usuário criado com sucesso!');
     } catch (error) {
-      alert('Erro ao cadastrar usuário: ' + error.message);
+      console.error('Erro ao criar usuário:', error);
+      // Error is already shown to user by createUser function
     }
   };
 
@@ -661,3 +658,31 @@ filterEndDate.addEventListener('input', updateFilterButtonState);
 
 // Inicializa o carregamento dos feedbacks ao abrir a página
 loadFeedbacks();
+
+async function createUser(userData) {
+  try {
+    const response = await fetch('/.netlify/functions/Users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Handle 409 Conflict specifically
+      if (response.status === 409) {
+        throw new Error('Este ID de atendente já está em uso. Por favor, remova o usuário existente primeiro.');
+      }
+      throw new Error(data.error || 'Erro ao criar usuário');
+    }
+
+    return data;
+  } catch (error) {
+    // Show error message to user (using your existing popup or message system)
+    openPopup(error.message);
+    throw error; // Re-throw to handle in calling function if needed
+  }
+}
