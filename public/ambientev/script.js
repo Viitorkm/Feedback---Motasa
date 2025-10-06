@@ -430,6 +430,13 @@ function openPopupUser() {
 
   form.onsubmit = async (e) => {
     e.preventDefault();
+    
+    // Log form values for debugging
+    console.log('Form values:', {
+      atendenteId: inputAtendente.value.trim(),
+      company: inputEmpresa.value.trim()
+    });
+
     const atendenteId = inputAtendente.value.trim();
     const company = inputEmpresa.value.trim();
 
@@ -440,17 +447,21 @@ function openPopupUser() {
 
     try {
       const userData = {
-        atendenteId: Number(atendenteId),
+        atendenteId: Number(atendenteId), // Ensure it's converted to number
         company: company
       };
       
-      await createUser(userData);
-      // If successful, refresh the table or show success message
+      console.log('Submitting user data:', userData);
+      
+      const result = await createUser(userData);
+      console.log('Creation successful:', result);
+      
+      document.body.removeChild(overlay); // Close the popup
       loadFeedbacks(); // Refresh the table
       openPopup('Usuário criado com sucesso!');
     } catch (error) {
-      console.error('Erro ao criar usuário:', error);
-      // Error is already shown to user by createUser function
+      console.error('Error in form submission:', error);
+      // Error is already shown by createUser function
     }
   };
 
@@ -661,6 +672,9 @@ loadFeedbacks();
 
 async function createUser(userData) {
   try {
+    // Log the request data for debugging
+    console.log('Attempting to create user with data:', userData);
+
     const response = await fetch('/.netlify/functions/Users', {
       method: 'POST',
       headers: {
@@ -669,10 +683,12 @@ async function createUser(userData) {
       body: JSON.stringify(userData)
     });
 
+    // Log the response for debugging
+    console.log('Server response status:', response.status);
     const data = await response.json();
+    console.log('Server response data:', data);
 
     if (!response.ok) {
-      // Handle 409 Conflict specifically
       if (response.status === 409) {
         throw new Error('Este ID de atendente já está em uso. Por favor, remova o usuário existente primeiro.');
       }
@@ -681,8 +697,8 @@ async function createUser(userData) {
 
     return data;
   } catch (error) {
-    // Show error message to user (using your existing popup or message system)
+    console.error('Error in createUser:', error);
     openPopup(error.message);
-    throw error; // Re-throw to handle in calling function if needed
+    throw error;
   }
 }
