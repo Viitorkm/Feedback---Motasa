@@ -217,33 +217,39 @@ function resetFilters() {
 
 function exportToCSV() {
   if (!feedbacks.length) {
-    message.textContent = "Nada para exportar.";
+    alert('Não há dados para exportar');
     return;
   }
-  // Cabeçalhos iguais à tabela
+
+  // Updated headers to match the current table structure
   const headers = ['Avaliador', 'Empresa/Nome', 'Setor', 'Estrelas', 'Comentário', 'Data', 'IP'];
+
+  // Map the data with proper field names
   const rows = feedbacks.map(fb => [
     fb.vendedor || '-',
     fb.empresa || '-',
     fb.setor_nome || '-',
     fb.rating || '-',
+    // Properly escape comments that contain commas or quotes
     `"${(fb.comment || '-').replace(/"/g, '""')}"`,
-    formatDateBR(fb.created_at || fb.createdAt || fb.date),
+    formatDateBR(fb.created_at),
     fb.ip_address || '-'
   ]);
 
-  let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+  // Create CSV content with headers and rows
+  let csvContent = headers.join(",") + "\n" + 
+                  rows.map(r => r.join(",")).join("\n");
 
+  // Create and trigger download
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `feedbacks_${new Date().toISOString().slice(0,10)}.csv`;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `feedbacks_${new Date().toISOString().slice(0,10)}.csv`);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
 
