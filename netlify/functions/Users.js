@@ -75,21 +75,30 @@ exports.handler = async function (event, context) {
     try {
       const body = JSON.parse(event.body);
 
+      // Validate input
       if (!body.atendenteId || !body.company) {
         return {
           statusCode: 400,
           headers,
-          body: JSON.stringify({ error: 'Campos obrigatórios ausentes' }),
+          body: JSON.stringify({ error: 'ID do atendente e empresa são obrigatórios' }),
         };
       }
 
-      // Check if user already exists - add proper error handling
-      const existingUser = await userModel.findOne({ 
-        atendenteId: Number(body.atendenteId) 
-      });
+      // Convert and validate atendenteId
+      const atendenteId = Number(body.atendenteId);
+      if (isNaN(atendenteId) || atendenteId <= 0) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ error: 'ID do atendente deve ser um número válido maior que zero' }),
+        };
+      }
 
+      // Check for existing user
+      const existingUser = await userModel.findOne({ atendenteId });
+      
       if (existingUser) {
-        console.log('User exists:', existingUser); // Debug log
+        console.log('Usuário existente:', existingUser);
         return {
           statusCode: 409,
           headers,
@@ -99,10 +108,10 @@ exports.handler = async function (event, context) {
         };
       }
 
-      // If we get here, user doesn't exist, so create new one
+      // Create new user
       const novoUsuario = await userModel.create({
-        atendenteId: Number(body.atendenteId),
-        company: body.company,
+        atendenteId,
+        company: body.company.trim()
       });
 
       return {
@@ -115,7 +124,7 @@ exports.handler = async function (event, context) {
       };
 
     } catch (err) {
-      console.error('Error creating user:', err); // Debug log
+      console.error('Erro detalhado:', err);
       return {
         statusCode: 500,
         headers,
