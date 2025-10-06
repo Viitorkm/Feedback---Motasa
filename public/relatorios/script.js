@@ -191,7 +191,6 @@ function renderTable(data) {
         </button>
       </td>
       <td data-label="Data">${formatDateBR(fb.created_at || fb.createdAt || fb.date)}</td>
-      <td data-label="IP">${fb.ip_address || "-"}</td>
     `;
 
     const btn = tr.querySelector('.commentBtn');
@@ -222,7 +221,7 @@ function exportToCSV() {
   }
 
   // Updated headers to match the current table structure
-  const headers = ['Avaliador', 'Empresa/Nome', 'Setor', 'Estrelas', 'Comentário', 'Data', 'IP'];
+  const headers = ['Avaliador', 'Empresa/Nome', 'Setor', 'Estrelas', 'Comentário', 'Data'];
 
   // Map the data with proper field names
   const rows = feedbacks.map(fb => [
