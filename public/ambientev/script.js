@@ -447,7 +447,7 @@ function openPopupUser() {
       //remover
       console.log(response)
       console.log(response.ok)
-      if (!response.ok) throw new Error('Erro ao cadastrar usuário.');
+      if (!response.ok) throw new Error(`Erro ao cadastrar usuário. ${error.message}`);
 
       alert('Usuário cadastrado com sucesso!');
       document.body.removeChild(overlay);
