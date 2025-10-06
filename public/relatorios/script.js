@@ -232,7 +232,6 @@ function exportToCSV() {
     // Properly escape comments that contain commas or quotes
     `"${(fb.comment || '-').replace(/"/g, '""')}"`,
     formatDateBR(fb.created_at),
-    fb.ip_address || '-'
   ]);
 
   // Create CSV content with headers and rows
