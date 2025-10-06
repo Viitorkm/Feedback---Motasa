@@ -83,6 +83,18 @@ exports.handler = async function (event, context) {
         };
       }
 
+      // Check if user already exists
+      const existingUser = await userModel.findOne({ atendenteId: Number(body.atendenteId) });
+      if (existingUser) {
+        return {
+          statusCode: 409, // Conflict
+          headers,
+          body: JSON.stringify({ 
+            error: 'Já existe um usuário com este ID de atendente. Remova o usuário existente primeiro.' 
+          }),
+        };
+      }
+
       const novoUsuario = await userModel.create({
         atendenteId: Number(body.atendenteId),
         company: body.company,
@@ -95,10 +107,21 @@ exports.handler = async function (event, context) {
       };
 
     } catch (err) {
+      // Handle mongoose duplicate key error explicitly
+      if (err.code === 11000) {
+        return {
+          statusCode: 409,
+          headers,
+          body: JSON.stringify({ 
+            error: 'Já existe um usuário com este ID de atendente. Remova o usuário existente primeiro.' 
+          }),
+        };
+      }
+
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: 'Erro ao criar usuário' }),
+        body: JSON.stringify({ error: 'Erro ao criar usuário', details: err.message }),
       };
     }
   }
